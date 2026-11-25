@@ -4,6 +4,7 @@ import { faker } from '@faker-js/faker';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
+import EntityUploadAlert from '../../../src/components/entity/upload/alert.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
 import EntityUploadExtraProperties from '../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
@@ -1595,6 +1596,77 @@ describe('EntityUpload', () => {
           const warnings = modal.getComponent(EntityUploadWarnings).props();
           warnings.extraProperties.should.eql(['circumference']);
           should.not.exist(warnings.missingProperties);
+        });
+    });
+
+    it('shows an error about unknown entities', () => {
+      testData.extendedDatasets.createPast(1);
+      const newEntity = ['', 'New Entity'];
+      const csv = createCSV([
+        ['__id', 'label'],
+        // Page 1
+        ...new Array(5).fill(newEntity),
+        // Page 2
+        [faker.string.uuid(), 'Updated Entity'],
+        ...new Array(4).fill(newEntity),
+        // Page 3
+        [faker.string.uuid(), 'Updated Entity']
+      ]);
+      const findError = (modal) => {
+        const alerts = modal.findAllComponents(EntityUploadAlert);
+        if (alerts.length === 0) return modal.findComponent(EntityUploadAlert);
+        alerts.length.should.equal(1);
+        const text = alerts[0].get('p').text();
+        text.should.startWith('Some rows contain Entity IDs that were not found');
+        return alerts[0];
+      };
+      return showModal()
+        .afterResponse(async (modal) => {
+          await selectFile(modal, csv);
+          findError(modal).exists().should.be.false;
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          const { serverEntities } = modal.vm.$container.requestData.localResources;
+          serverEntities.dataExists.should.be.true;
+          serverEntities.size.should.equal(0);
+
+          const errors = modal.getComponent(EntityUploadErrors).props();
+          errors.count.should.equal(1);
+          should.exist(errors.unknownEntities);
+          findError(modal).props().ranges.should.eql([[6, 6]]);
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          // As additional unknown entities are discovered, they are added to
+          // the list.
+          findError(modal).props().ranges.should.eql([[6, 6], [11, 11]]);
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Previous page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          // The first unknown entity is not added a second time.
+          findError(modal).props().ranges.should.eql([[6, 6], [11, 11]]);
+        })
+        .request(modal => {
+          const a = findError(modal).findAll('a');
+          a.length.should.equal(2);
+          return a[1].trigger('click');
+        })
+        .modify(respondWithEntities)
+        .afterResponse(async (modal) => {
+          const table = modal.getComponent(EntityUploadTable);
+          table.props().rowIndex.should.equal(10);
+          table.props().highlighted.should.eql([10, 10]);
+
+          // Selecting any file clears the error.
+          await selectFile(modal, csv);
+          findError(modal).exists().should.be.false;
         });
     });
   });
