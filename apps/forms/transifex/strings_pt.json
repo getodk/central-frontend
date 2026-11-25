@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Tentar novamente"
+        },
+        "recover": {
+          "string": ""
+        },
+        "discard": {
+          "string": ""
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "Os dados são válidos"
         },
         "body": {
-          "string": "Os dados que você digitou são válidos, mas não foram enviados por que essa é apenas uma Visualização do formulário."
+          "string": ""
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formulário enviado com sucesso!"
+          "string": ""
         },
         "body": {
-          "string": "Você pode preencher novamente esse formulário ou fechar a página se já tiver terminado."
+          "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "Preencher novamente"
+            "string": ""
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Enviado com sucesso"
+          "string": ""
         },
         "body": {
           "string": "Você será redirecionado agora."
@@ -82,7 +96,7 @@
       },
       "sendingDataModal": {
         "title": {
-          "string": "Enviando a Resposta"
+          "string": ""
         },
         "body": {
           "string": "Seus dados estão sendo enviados, por favor não feche essa janela até que o envio tenha terminado."
@@ -108,7 +122,7 @@
           "string": "Erro no envio"
         },
         "body": {
-          "string": "Seus dados não foram enviados completamente. Por favor, clique no botão “Tentar novamente” para tentar novamente. Se o erro persistir, entre em contato com a pessoa que solicitou o preenchimento deste formulário ou {supportEmail}."
+          "string": ""
         }
       },
       "util": {
