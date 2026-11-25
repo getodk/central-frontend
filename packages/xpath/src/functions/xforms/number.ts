@@ -1,4 +1,4 @@
-import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
+import { DAY_MILLISECONDS, ISO_DATE_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
@@ -6,6 +6,9 @@ import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
 import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
+import { Temporal } from 'temporal-polyfill';
+
+const EPOCH = Temporal.PlainDate.from('1970-01-01');
 
 export const abs = mathAlias('abs');
 export const acos = mathAlias('acos');
@@ -65,6 +68,12 @@ export const number = new FunctionImplementation(
 
     if (type === 'NODE' || type === 'STRING') {
       const stringValue = results.toString();
+      if (ISO_DATE_LIKE_PATTERN.test(stringValue)) {
+        const date = Temporal.PlainDate.from(stringValue);
+        const days = date.since(EPOCH, { largestUnit: 'days' }).days;
+        return new NumberEvaluation(context, days);
+      }
+
       let dateTime;
       try {
         dateTime = dateTimeFromString(context.timeZone, stringValue);
