@@ -101,6 +101,7 @@ export abstract class ValueEvaluation<
     if (operand instanceof LocationPathEvaluation) {
       return operand.some((rhs) => this.lt(rhs));
     }
+
     return this.toNumber() < operand.toNumber();
   }
 

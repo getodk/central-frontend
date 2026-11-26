@@ -8,8 +8,7 @@ import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
 import { Temporal } from 'temporal-polyfill';
 import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
-
-const EPOCH = Temporal.PlainDate.from('1970-01-01');
+import { daysSinceEpoch } from '../../lib/datetime/functions.ts';
 
 export const abs = mathAlias('abs');
 export const acos = mathAlias('acos');
@@ -72,10 +71,9 @@ export const number = new FunctionImplementation(
       if (ISO_DATE_LIKE_PATTERN.test(stringValue)) {
         try {
           const date = Temporal.PlainDate.from(stringValue);
-          const days = date.since(EPOCH, { largestUnit: 'days' }).days;
           return new DateLikeEvaluation(context, date, {
             booleanValue: true,
-            stringValue: String(days),
+            stringValue: String(daysSinceEpoch(date)),
           });
         } catch {
           // fall through

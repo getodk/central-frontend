@@ -3,6 +3,7 @@ import type { XPathNode } from '../adapter/interface/XPathNode.ts';
 import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
 import type { LocationPathEvaluation } from './LocationPathEvaluation.ts';
 import { ValueEvaluation } from './ValueEvaluation.ts';
+import { daysSinceEpoch } from '../lib/datetime/functions.ts';
 
 interface PrecomputedXPathValues {
   readonly booleanValue?: boolean;
@@ -39,8 +40,7 @@ export class DateLikeEvaluation<T extends XPathNode> extends ValueEvaluation<T, 
       return;
     }
 
-    const epoch = Temporal.PlainDate.from('1970-01-01'); // keeps coming up....
-    const days = date.since(epoch, { largestUnit: 'days' }).days;
+    const days = daysSinceEpoch(date);
     this.value = days * DAY_MILLISECONDS;
 
     this.booleanValue = booleanValue ?? days !== 0;

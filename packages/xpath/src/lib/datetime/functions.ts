@@ -1,10 +1,11 @@
 import { Temporal } from 'temporal-polyfill';
 
+const EPOCH = Temporal.PlainDate.from('1970-01-01');
+
 export const currentLocalDateTimeString = (timeZone: Temporal.TimeZoneLike): string => {
   return localDateTimeString(now(timeZone));
 };
 
-// TODO hopefully we can kill this hack?
 export const localDateTimeString = (dateTime: Temporal.ZonedDateTime): string => {
   const resultDateTime = dateTime
     .toPlainDateTime()
@@ -15,7 +16,6 @@ export const localDateTimeString = (dateTime: Temporal.ZonedDateTime): string =>
   return `${resultDateTime}${dateTime.offset}`;
 };
 
-// TODO hopefully we can kill this hack?
 export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): string => {
   const dateTimeString = localDateTimeString(dateTime);
 
@@ -24,3 +24,7 @@ export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): str
 
 export const now = (timeZone: Temporal.TimeZoneLike): Temporal.ZonedDateTime =>
   Temporal.Now.zonedDateTimeISO(timeZone);
+
+export const daysSinceEpoch = (date: Temporal.PlainDate): number => {
+  return date.since(EPOCH, { largestUnit: 'days' }).days;
+};

@@ -9,7 +9,7 @@ import { FunctionImplementation } from '../../evaluator/functions/FunctionImplem
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
-import { now } from '../../lib/datetime/functions.ts';
+import { daysSinceEpoch, now } from '../../lib/datetime/functions.ts';
 import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
 
@@ -306,9 +306,7 @@ export const decimalDateTime = new NumberFunction(
     }
 
     if (dateTime instanceof Temporal.PlainDate) {
-      const epoch = Temporal.PlainDate.from('1970-01-01'); // keeps coming up....
-      const days = dateTime.since(epoch, { largestUnit: 'days' }).days;
-      return days;
+      return daysSinceEpoch(dateTime);
     }
     return dateTime.epochMilliseconds / DAY_MILLISECONDS;
   }
