@@ -1,14 +1,15 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { expectFullScreenScreenshot, expectScreenshot } from '../../screenshot.ts';
 
-const ANIMATION_TIME = 1000; // Map has a default of 1s rendering and animation time
-const GEOLOCATION_DEBOUNCE_TIME = 500;
-const FLY_TO_CURRENT_LOCATION_TIME = GEOLOCATION_DEBOUNCE_TIME + ANIMATION_TIME * 2;
+const matchSettledCountOtherThan = (settledCount: string | null) => {
+  return new RegExp(`^(?!${settledCount}$)\\d+$`);
+};
 
 export class MapControl {
   private readonly MAP_COMPONENT_SELECTOR = '.map-block-component';
   private readonly MAP_CONTAINER_SELECTOR = '.map-container';
   private readonly MAP_SELECTOR = '.map-block';
+  private readonly SETTLED_ATTRIBUTE = 'data-render-settled';
 
   private readonly page: Page;
 
@@ -83,9 +84,8 @@ export class MapControl {
     const button = mapComponent.locator('.ol-zoom').getByText('+', { exact: true });
     await expect(button).toBeVisible();
     for (let i = 0; i < times; i++) {
-      await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.waitForMapToSettle(mapComponent);
+      await this.moveMapAndWaitToSettle(mapComponent, () => button.click());
     }
   }
 
@@ -93,9 +93,8 @@ export class MapControl {
     const button = mapComponent.locator('.ol-zoom').getByText('–', { exact: true });
     await expect(button).toBeVisible();
     for (let i = 0; i < times; i++) {
-      await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.waitForMapToSettle(mapComponent);
+      await this.moveMapAndWaitToSettle(mapComponent, () => button.click());
     }
   }
 
@@ -105,11 +104,16 @@ export class MapControl {
     await button.click();
   }
 
-  async centerCurrentLocation(mapComponent: Locator) {
+  async requestCurrentLocation(mapComponent: Locator) {
     const button = mapComponent.locator('button.zoom-current-location');
     await expect(button).toBeVisible();
     await button.click();
-    await this.page.waitForTimeout(FLY_TO_CURRENT_LOCATION_TIME);
+  }
+
+  async centerCurrentLocation(mapComponent: Locator) {
+    await this.moveMapAndWaitToSettle(mapComponent, () =>
+      this.requestCurrentLocation(mapComponent)
+    );
   }
 
   async toggleFullScreen(mapComponent: Locator) {
@@ -123,10 +127,9 @@ export class MapControl {
   }
 
   async exitFullScreen(mapComponent: Locator) {
-    await this.page.keyboard.press('Escape');
-    await expect(mapComponent.locator('.map-full-screen')).not.toBeVisible();
     // Leaving full screen refits the map to its features with an animation.
-    await this.waitForMapToSettle(mapComponent);
+    await this.moveMapAndWaitToSettle(mapComponent, () => this.page.keyboard.press('Escape'));
+    await expect(mapComponent.locator('.map-full-screen')).not.toBeVisible();
   }
 
   /**
@@ -167,8 +170,7 @@ export class MapControl {
   async getLocationFromOverlay(mapComponent: Locator) {
     const button = mapComponent.locator('.map-overlay').getByText('Get location');
     await expect(button).toBeVisible();
-    await button.click();
-    await this.page.waitForTimeout(FLY_TO_CURRENT_LOCATION_TIME);
+    await this.moveMapAndWaitToSettle(mapComponent, () => button.click());
   }
 
   async closeProperties(mapComponent: Locator) {
@@ -205,10 +207,19 @@ export class MapControl {
 
   private async waitForMapToSettle(mapComponent: Locator) {
     const map = mapComponent.locator(this.MAP_SELECTOR);
-    // An action triggered just before needs a frame to start moving the map.
     await this.waitForNextPaint(map);
-    await expect(map).toHaveAttribute('data-render-settled');
+    await expect(map).toHaveAttribute(this.SETTLED_ATTRIBUTE);
     await this.page.waitForLoadState('networkidle');
+  }
+
+  private async moveMapAndWaitToSettle(mapComponent: Locator, moveMap: () => Promise<void>) {
+    const map = mapComponent.locator(this.MAP_SELECTOR);
+    const settledCount = await map.getAttribute(this.SETTLED_ATTRIBUTE);
+    await moveMap();
+    await expect(map).toHaveAttribute(
+      this.SETTLED_ATTRIBUTE,
+      matchSettledCountOtherThan(settledCount)
+    );
   }
 
   async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {

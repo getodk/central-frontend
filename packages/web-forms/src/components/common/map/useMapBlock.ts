@@ -85,13 +85,19 @@ const isViewMoving = (map: Map) => {
   return view.getAnimating() || view.getInteracting();
 };
 
-const markRenderSettled = (map: Map, mapContainer: HTMLElement) => {
-  mapContainer.toggleAttribute(RENDER_SETTLED_ATTRIBUTE, !isViewMoving(map));
+const markRenderSettled = (map: Map, mapContainer: HTMLElement, frameIndex = 0) => {
+  if (isViewMoving(map)) {
+    mapContainer.removeAttribute(RENDER_SETTLED_ATTRIBUTE);
+    return;
+  }
+  mapContainer.setAttribute(RENDER_SETTLED_ATTRIBUTE, String(frameIndex));
 };
 
 const trackRenderSettled = (map: Map, mapContainer: HTMLElement) => {
   map.on(['movestart', 'loadstart'], () => mapContainer.removeAttribute(RENDER_SETTLED_ATTRIBUTE));
-  map.on('rendercomplete', () => markRenderSettled(map, mapContainer));
+  map.on('rendercomplete', (event) =>
+    markRenderSettled(map, mapContainer, event.frameState?.index)
+  );
 };
 
 interface MapErrorMessage {
