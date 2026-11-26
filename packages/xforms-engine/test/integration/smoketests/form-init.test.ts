@@ -3,7 +3,6 @@ import { stringAnswer } from '../../scenario/answer/ExpectedStringAnswer.ts';
 import { Scenario } from '../../scenario/jr/Scenario.ts';
 
 import simple from '../../scenario/fixtures/test-javarosa/resources/simple-form.xml?raw';
-import form2 from '../../scenario/fixtures/test-javarosa/resources/form2.xml?raw';
 import secondaryInstance from '../../scenario/fixtures/test-javarosa/resources/secondary-instance.xml?raw';
 import internalSelect10 from '../../scenario/fixtures/test-javarosa/resources/internal_select_10.xml?raw';
 import lastSavedBlank from '../../scenario/fixtures/test-javarosa/resources/last-saved-blank.xml?raw';
@@ -14,7 +13,6 @@ import badRange from '../../scenario/fixtures/test-javarosa/resources/bad-range-
 import internalEmptySelect from '../../scenario/fixtures/test-javarosa/resources/internal_empty_select.xml?raw';
 import metaNamespace from '../../scenario/fixtures/test-javarosa/resources/meta-namespace-form.xml?raw';
 import templateRepeat from '../../scenario/fixtures/test-javarosa/resources/template-repeat.xml?raw';
-import templateRepeatAlt from '../../scenario/fixtures/test-javarosa/resources/template-repeat-alt.xml?raw';
 import eIMCI from '../../scenario/fixtures/test-javarosa/resources/eIMCI-by-D-Tree.xml?raw';
 import submissionElement from '../../scenario/fixtures/test-javarosa/resources/submission-element.xml?raw';
 import bodyBeforeModel from '../../scenario/fixtures/test-javarosa/resources/body-before-model.xml?raw';
@@ -22,45 +20,6 @@ import twoModels from '../../scenario/fixtures/test-javarosa/resources/two-model
 import setvalueAction from '../../scenario/fixtures/test-javarosa/resources/form-with-setvalue-action.xml?raw';
 import groupWithNodeset from '../../scenario/fixtures/test-javarosa/resources/group-with-nodeset-attr.xml?raw';
 import groupWithRef from '../../scenario/fixtures/test-javarosa/resources/group-with-ref-attr.xml?raw';
-
-/**
- * **PORTING NOTES**
- *
- * This is intended, conceptually, as an analogue to JavaRosa's
- * `assertNoParseErrors` method, defined on the `XFormParserTest` test class.
- *
- * This is a stub function/proposal which accepts a {@link Scenario}. The intent
- * is to:
- *
- * 1. Anticipate our future goal of producing Result types for fallible aspects
- *    of the engine/client interface, and potentially adapt the
- *    {@link Scenario.init} interface to allow for more flexible assertions of
- *    expected error conditions.
- *
- * 2. Anticipate, also, the possibility that we may want to **non-modal**
- *    produce error (or warning) conditions (i.e. not blocking form
- *    initialization and/or downstream form filling activity). This would
- *    (should) involve some careful consideration, but an obvious use case might
- *    be application of form feature detection where we expect a form to be
- *    usable as-is, but may want to alert users to aspects of the form that are
- *    ignored and/or deprecated, or otherwise warrant a form designer/tester's
- *    attention.
- *
- * We should consider applying an assertion like this more broadly, perhaps even
- * globally. In which case, it might make more sense to invoke it implicitly,
- * potentially exempting certain kinds of expected failures, as part of call to
- * {@link Scenario.init}.
- */
-const expectNoInitializationErrors = (_scenario: Scenario) => {
-  if (!didLogAssertNoInitializationErrorsTODOMessage) {
-    // eslint-disable-next-line no-console
-    console.log('TODO: assertNoParseErrors');
-
-    didLogAssertNoInitializationErrorsTODOMessage = true;
-  }
-};
-
-let didLogAssertNoInitializationErrorsTODOMessage = false;
 
 interface FailureExpectationOptions {
   readonly disregardJavaRosaFailureExpectation: boolean;
@@ -87,12 +46,7 @@ interface FailureExpectationOptions {
  *
  * - If initialization succeeds, it will generally be run with the standard
  *   Vitest {@link it} function. These tests will likely have minimal, if any,
- *   porting notes. When the corresponding JavaRosa test calls
- *   `assertNoParseErrors`, that call be replaced with a call to
- *   {@link expectNoInitializationErrors}. Passing initialization tests which
- *   had no corresponding call in JavaRosa add this call anyway. See
- *   {@link expectNoInitializationErrors} JSDoc for details of the function's
- *   rationale and its anticipated future usage.
+ *   porting notes.
  *
  * - If initialization is expected to fail in JavaRosa, we will use one of the
  *   typical mechanisms to test for expected failure modes, and an expected
@@ -142,15 +96,6 @@ interface FailureExpectationOptions {
  *
  * - - -
  *
- * Note that some of these tests reference form fixtures with features we don't
- * currently organize into a specific suite. I'll try to catalogue these here as
- * they're encountered:
- *
- * - `<range>`
- * - `<rank>`
- *
- * - - -
- *
  * If this process holds, it very closely resembles the schema for a
  * parameterized/table test. A first pass at generalization felt like it was
  * more trouble/less clear than its worth. But with some hindsight, it may be
@@ -171,31 +116,10 @@ interface FailureExpectationOptions {
  *   team-/user-shared setting).
  */
 describe('Form initialization smoke tests', () => {
-  describe('XFormParserTest.java', () => {
-    interface NamespaceOptions {
-      readonly includeCommonNamespaces: boolean;
-    }
-
-    it('parsesSimpleForm', async () => {
-      const scenario = await Scenario.init(simple);
-
-      expectNoInitializationErrors(scenario);
+  describe('parse', () => {
+    it('simple form', async () => {
+      await Scenario.init(simple);
     });
-
-    it('parsesForm2', async () => {
-      const scenario = await Scenario.init(form2);
-
-      // assertEquals("My Survey", formDef.getTitle());
-      // assertEquals(3, formDef.getChildren().size());
-      // assertEquals("What is your first name?", formDef.getChild(0).getLabelInnerText());
-
-      expectNoInitializationErrors(scenario);
-    });
-
-    /**
-     * Scenario test. Ported elsewhere.
-     */
-    it.skip('spacesBetweenOutputs_areRespected');
 
     /**
      * **PORTING NOTES**
@@ -204,22 +128,16 @@ describe('Form initialization smoke tests', () => {
      * `@Before`/`setUp` method in the JavaRosa "vat". Since it's only
      * referenced by this test, we define it locally for now.
      */
-    it('parsesSecondaryInstanceForm', async () => {
-      const scenario = await Scenario.init(secondaryInstance);
-
-      expectNoInitializationErrors(scenario);
+    it('form with secondary instance', async () => {
+      await Scenario.init(secondaryInstance);
     });
 
-    it('parsesSecondaryInstanceForm2', async () => {
-      const scenario = await Scenario.init(internalSelect10);
-
-      expectNoInitializationErrors(scenario);
+    it('form with internal select', async () => {
+      await Scenario.init(internalSelect10);
     });
 
     it('parses last saved instance with null src', async () => {
       const scenario = await Scenario.init(lastSavedBlank);
-
-      expectNoInitializationErrors(scenario);
       expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('')); // nothing to bind from the last-saved instance
     });
 
@@ -233,7 +151,6 @@ describe('Form initialization smoke tests', () => {
         </data>`;
 
       const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml });
-      expectNoInitializationErrors(scenario);
       expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer('Foo'));
     });
 
@@ -254,84 +171,37 @@ describe('Form initialization smoke tests', () => {
         </data>`;
 
       const scenario = await Scenario.init(lastSavedBlank, { lastSavedXml, editInstance });
-      expectNoInitializationErrors(scenario);
       expect(scenario.answerOf('/data/item')).toEqualAnswer(stringAnswer(''));
     });
 
-    it('multipleInstancesFormSavesAndRestores', async () => {
+    it('save and restore cascading select', async () => {
       const scenario = await Scenario.init(simplerCascadingSelect);
-
-      expectNoInitializationErrors(scenario);
-
-      // Path serializedForm = getSerializedFormPath(originalFormDef);
-      // FormDef deserializedFormDef = deserializeAndCleanUpSerializedForm(serializedForm);
-
-      // assertThat(originalFormDef.getTitle(), is(deserializedFormDef.getTitle()));
+      expect(scenario.getTitle()).toBe('Simpler Cascading Select Form');
+      const restored = await scenario.serializeAndRestoreInstanceState();
+      expect(restored.getTitle()).toBe('Simpler Cascading Select Form');
     });
 
-    /**
-     * JR:
-     *
-     * ensure serializing and deserializing a range form is done without errors
-     * see https://github.com/getodk/javarosa/issues/245 why this is needed
-     */
-    it('rangeFormSavesAndRestores', async () => {
+    it('save and restore range', async () => {
       const scenario = await Scenario.init(range);
-
-      expectNoInitializationErrors(scenario);
-
-      // Path serializedForm = getSerializedFormPath(originalFormDef);
-      // FormDef deserializedFormDef = deserializeAndCleanUpSerializedForm(serializedForm);
-
-      // assertThat(originalFormDef.getTitle(), is(deserializedFormDef.getTitle()));
+      expect(scenario.getTitle()).toBe('Form with a Range');
+      const restored = await scenario.serializeAndRestoreInstanceState();
+      expect(restored.getTitle()).toBe('Form with a Range');
     });
 
-    it('parsesRankForm', async () => {
+    it('form with rank rank', async () => {
       const scenario = await Scenario.init(rank);
-
-      // assertEquals(formDef.getTitle(), "Rank Form");
-      // assertEquals(1, formDef.getChildren().size());
-      // assertEquals(CONTROL_RANK, ((QuestionDef) formDef.getChild(0)).getControlType());
-
-      // assertNoParseErrors(formDef);
-      expectNoInitializationErrors(scenario);
+      expect(scenario.getTitle()).toBe('Rank Form');
+      scenario.next('/data/rankWidget');
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * For now this is redundant to `rangeFormSavesAndRestores`. It's included
-     * and run separately in case we pursue the serde aspects of that test.
-     */
-    it('parsesRangeForm', async () => {
-      const scenario = await Scenario.init(range);
-
-      expectNoInitializationErrors(scenario);
-    });
-
-    /**
-     * **PORTING NOTES**
-     *
-     * Parse (and presumably init) expected to fail on form's malformed
-     * definition of the form's `<range>` field. Presumably it is invalid
-     * because its `start` attribute is not a valid numeric/decimal value.
-     *
-     * It's unclear whether a valid `start` attribute value of `"-2.01"` would
-     * be sufficient. The spec language (from
-     * {@link https://www.w3.org/TR/2003/REC-xforms-20031014/slice8.html#ui-range | XForms 1.0})
-     * suggests that `step`...
-     *
-     * > Must be of a type capable of expressing the difference between two
-     * > legal values of the underlying data.
-     *
-     * Would it be valid, given it would produce the steps `…1.49, 1.99, 2.0`?
-     */
-    it.fails('throwsParseExceptionOnBadRangeForm', async () => {
+    it('init throws on invalid range attribute', async () => {
       const init = async () => {
         await Scenario.init(badRange);
       };
 
-      await expect(init).rejects.toThrowError(/parse/);
+      await expect(init).rejects.toThrow(
+        'Expected attribute start to be defined with numeric string, got: "-2.0.1"'
+      );
     });
 
     /**
@@ -368,29 +238,21 @@ describe('Form initialization smoke tests', () => {
         await Scenario.init(internalEmptySelect);
       };
 
-      await expect(init).rejects.toThrowError("Select question 'First' has no choices");
+      await expect(init).rejects.toThrow("Select question 'First' has no choices");
     });
 
-    /**
-     * Scenario test. Ported elsewhere.
-     */
-    it.skip('formWithCountNonEmptyFunc_ShouldNotThrowException');
-
-    it('parsesMetaNamespaceForm', async () => {
-      const scenario = await Scenario.init(metaNamespace);
-
-      expectNoInitializationErrors(scenario);
+    it('form with meta namespace', async () => {
+      await Scenario.init(metaNamespace);
     });
 
-    it('serializeAndRestoreMetaNamespaceFormInstance', async () => {
+    it('save and restore form with meta namespace', async () => {
       // // Given
       // FormDef formDef = parse(r("meta-namespace-form.xml"));
-      const scenario = await Scenario.init(metaNamespace);
+      await Scenario.init(metaNamespace);
 
       // assertEquals(formDef.getTitle(), "Namespace for Metadata");
 
       // assertNoParseErrors(formDef);
-      expectNoInitializationErrors(scenario);
 
       // TreeElement audit = findDepthFirst(formDef.getInstance().getRoot(), AUDIT_NODE);
       // TreeElement audit2 = findDepthFirst(formDef.getInstance().getRoot(), AUDIT_2_NODE);
@@ -444,43 +306,12 @@ describe('Form initialization smoke tests', () => {
       // assertEquals(AUDIT_3_ANSWER, audit3.getValue().getValue());
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * - Fails with directly ported form fixture, which is missing (at least)
-     *   the `xf` namespace declaration. Unclear whether we should:
-     *
-     *     - Produce an initialization error (form is technically invalid)
-     *
-     *     - Detect the condition and handle silently
-     *
-     *     - Detect the condition and handle gracefully, perhaps with a warning
-     *
-     *     If we do handle it, we should probably do a sanity check that the
-     *     form doesn't have a namespace collision on the `xf` prefix.
-     *
-     * - Parameterized to use an alternate fixture with common namespaces
-     *   present, to demonstrate the test otherwise passe.
-     */
-    describe.each<NamespaceOptions>([
-      { includeCommonNamespaces: false },
-      { includeCommonNamespaces: true },
-    ])('include common namespaces: $includeCommonNamespaces', ({ includeCommonNamespaces }) => {
-      let testFn: typeof it | typeof it.fails;
+    it('throws when xforms namespace not defined', async () => {
+      const init = async () => {
+        await Scenario.init(templateRepeat);
+      };
 
-      if (includeCommonNamespaces) {
-        testFn = it;
-      } else {
-        testFn = it.fails;
-      }
-
-      testFn('parseFormWithTemplateRepeat', async () => {
-        const scenario = await Scenario.init(
-          includeCommonNamespaces ? templateRepeatAlt : templateRepeat
-        );
-
-        expectNoInitializationErrors(scenario);
-      });
+      await expect(init).rejects.toThrow('Failed to evaluate node for expression ./xf:model');
     });
 
     /**
@@ -501,37 +332,19 @@ describe('Form initialization smoke tests', () => {
      *
      * The form also binds several node-sets which would descend from this
      * `<cough/>` leaf node, but are not present in the model structure.
-     *
-     * It's unclear if this is a pattern we should expect and/or support.
-     *
-     * Also worth noting that at a quick glance, this form fixture is a rare (in
-     * my experience) case where there are body elements with meaningful
-     * structural hierarchy from their model counterparts. The first case
-     * noticed structures:
-     *
-     * ```xml
-     * <group ref="/imci/other_treatment/cough">
-     *   <trigger ref="/imci/other_treatment/info_soothe_throat">...
-     * ```
-     *
-     * Note the trigger's `ref` is outside of the `cough` group's model
-     * hierarchy. I vaguely recall seeing other JavaRosa references to this
-     * possibility. And I also understand it to be valid in the XForms spec. But
-     * this is **another case** (conceptually related, but orthogonal) where
-     * it's unclear whether support for the pattern is in scope.
-     *
-     * If either of these patterns are in scope (or may be in the future), I'd
-     * like to spend more time getting familiar with this fixture (and/or others
-     * known to have similar aspects of form design).
      */
-    it.fails('parseIMCIbyDTreeForm', async () => {
-      const scenario = await Scenario.init(eIMCI);
+    it('throws when parsing a form with inconsistency between model and body', async () => {
+      const init = async () => {
+        await Scenario.init(eIMCI);
+      };
 
-      expectNoInitializationErrors(scenario);
+      await expect(init).rejects.toThrow(
+        'Unexpected body element for nodeset /imci/other_treatment/cough'
+      );
     });
 
     it('parseFormWithSubmissionElement', async () => {
-      const scenario = await Scenario.init(submissionElement);
+      await Scenario.init(submissionElement);
 
       // // Given & When
       // FormDef formDef = parse(r("submission-element.xml"));
@@ -540,7 +353,6 @@ describe('Form initialization smoke tests', () => {
       // assertEquals(formDef.getTitle(), "Single Submission Element");
 
       // assertNoParseErrors(formDef);
-      expectNoInitializationErrors(scenario);
 
       // SubmissionProfile submissionProfile = formDef.getSubmissionProfile();
       // assertEquals("http://some.destination.com", submissionProfile.getAction());
@@ -550,52 +362,12 @@ describe('Form initialization smoke tests', () => {
     });
 
     /**
-     * **PORTING NOTES**
-     *
      * JavaRosa has a limitation, which deviates from (XML!) spec: it will fail
      * to parse a form where the `<h:body>` precedes `<h:head>`.
-     *
-     * 1. For some reason (probably other aspects of implementation detail?), it
-     *    discusses this limtation in terms of the **model** preceding the body.
-     *    It seemed like this may indicate a structural deviation with the
-     *    `<model>` occurring outside of `<h:head>`, but this is not the case.
-     *
-     * 2. Web forms has no such limitation. As a spec deviation, this test is
-     *    parameterized to demonstrate JavaRosa's failure expectation failing,
-     *    and then actual/expected initialization success.
-     *
-     * - - -
-     *
-     * JR:
-     *
-     * Simple tests that documents assumption that the model has to come before
-     * the body tag. According to the comment above
-     * {@link XFormParser#parseModel(Element)} method, this is not mandated by
-     * the specs but has been implemented this way to keep parsing simpler.
      */
-    describe.each<FailureExpectationOptions>([
-      { disregardJavaRosaFailureExpectation: false },
-      { disregardJavaRosaFailureExpectation: true },
-    ])(
-      'disregard JavaRosa failure expectation: $disregardJavaRosaFailureExpectation',
-      ({ disregardJavaRosaFailureExpectation }) => {
-        if (disregardJavaRosaFailureExpectation) {
-          it('parseFormWithBodyBeforeModel', async () => {
-            const scenario = await Scenario.init(bodyBeforeModel);
-
-            expectNoInitializationErrors(scenario);
-          });
-        } else {
-          it.fails('parseFormWithBodyBeforeModel', async () => {
-            const init = async () => {
-              await Scenario.init(bodyBeforeModel);
-            };
-
-            await expect(init).rejects.toThrowError(/parse/);
-          });
-        }
-      }
-    );
+    it('allows form to define body before model', async () => {
+      await Scenario.init(bodyBeforeModel);
+    });
 
     /**
      * **PORTING NOTES**
@@ -630,8 +402,6 @@ describe('Form initialization smoke tests', () => {
 
       const scenario = await Scenario.init(twoModels);
 
-      expectNoInitializationErrors(scenario);
-
       // // Then
       // assertEquals(formDef.getTitle(), "Two Models");
       // List<String> parseWarnings = formDef.getParseWarnings();
@@ -662,95 +432,27 @@ describe('Form initialization smoke tests', () => {
       // assertEquals("first-model", firstModelInstanceId);
     });
 
-    it('parseFormWithSetValueAction', async () => {
+    it('form with a setvalue action', async () => {
       const scenario = await Scenario.init(setvalueAction);
-      expectNoInitializationErrors(scenario);
+
       expect(scenario.answerOf('/data/text')).toEqualAnswer(stringAnswer('Test Value'));
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * Adds basic assertion for inclusion of group in form state.
-     */
-    it('parseGroupWithNodesetAttrForm', async () => {
+    it('group with nodeset', async () => {
       const scenario = await Scenario.init(groupWithNodeset);
-
-      expectNoInitializationErrors(scenario);
-
       expect(scenario.getInstanceNode('/data/R1[1]/G2')).toMatchObject({
         nodeType: 'group',
       });
-
-      // // Then
-      // assertEquals(formDef.getTitle(), "group with nodeset attribute");
-      // assertEquals("Number of error messages", 0, formDef.getParseErrors().size());
-
-      // final TreeReference expectedTreeReference = new TreeReference();
-      // expectedTreeReference.setRefLevel(-1); // absolute reference
-      // expectedTreeReference.add("data", -1); // the instance root
-      // expectedTreeReference.add("R1", -1); // the outer repeat
-      // expectedTreeReference.add("G2", -1); // the inner group
-      // final IDataReference expectedXPathReference = new XPathReference(expectedTreeReference);
-
-      // IFormElement groupElement = formDef.getChild(0).getChild(0);
-
-      // assertThat(groupElement, instanceOf(GroupDef.class));
-      // assertThat(((GroupDef) groupElement).getRepeat(), is(false));
-      // assertThat(groupElement.getBind(), is(expectedXPathReference));
     });
 
-    /**
-     * **PORTING NOTES**
-     *
-     * Adds basic assertion for inclusion of groups in form state.
-     */
-    it('parseGroupWithRefAttrForm', async () => {
+    it('group with ref', async () => {
       const scenario = await Scenario.init(groupWithRef);
-
-      expectNoInitializationErrors(scenario);
-
       expect(scenario.getInstanceNode('/data/G1')).toMatchObject({
         nodeType: 'group',
       });
       expect(scenario.getInstanceNode('/data/G1/G3')).toMatchObject({
         nodeType: 'group',
       });
-
-      // // Then
-      // assertEquals(formDef.getTitle(), "group with ref attribute");
-      // assertEquals("Number of error messages", 0, formDef.getParseErrors().size());
-
-      // final TreeReference g2TreeRef = new TreeReference();
-      // g2TreeRef.setRefLevel(-1); // absolute reference
-      // g2TreeRef.add("data", -1); // the instance root
-      // g2TreeRef.add("G1", -1); // the outer group
-      // g2TreeRef.add("G2", -1); // the inner group
-
-      // // G2 does NOT have a `ref`.
-      // // Collect implicitly assumes the TreeReference will be created like this.
-      // IDataReference g2AbsRef = FormDef.getAbsRef(null, g2TreeRef.getParentRef());
-
-      // IFormElement g2Element = formDef.getChild(0).getChild(0);
-      // assertThat(g2Element.getBind(), is(g2AbsRef));
-
-      // final TreeReference g3TreeRef = new TreeReference();
-      // g3TreeRef.setRefLevel(-1); // absolute reference
-      // g3TreeRef.add("data", -1); // the instance root
-      // g3TreeRef.add("G1", -1); // the outer group
-      // g3TreeRef.add("G3", -1); // the inner group
-
-      // // G3 has a `ref`.
-      // // Collect implicitly assumes the TreeReference will be created like this.
-      // IDataReference g3AbsRef = FormDef.getAbsRef(new XPathReference(g3TreeRef), g3TreeRef.getParentRef());
-
-      // IFormElement g3Element = formDef.getChild(0).getChild(1);
-      // assertThat(g3Element.getBind(), is(g3AbsRef));
     });
-
-    /**
-     * Scenario test. Ported elsewhere.
-     */
-    it.skip('testSetValueWithStrings');
   });
 });
