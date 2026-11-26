@@ -78,6 +78,22 @@ const DEFAULT_VIEW_PROJECTION = 'EPSG:3857';
 
 export const ODK_VALUE_PROPERTY = 'odk_value';
 
+const RENDER_SETTLED_ATTRIBUTE = 'data-render-settled';
+
+const isViewMoving = (map: Map) => {
+  const view = map.getView();
+  return view.getAnimating() || view.getInteracting();
+};
+
+const markRenderSettled = (map: Map, mapContainer: HTMLElement) => {
+  mapContainer.toggleAttribute(RENDER_SETTLED_ATTRIBUTE, !isViewMoving(map));
+};
+
+const trackRenderSettled = (map: Map, mapContainer: HTMLElement) => {
+  map.on(['movestart', 'loadstart'], () => mapContainer.removeAttribute(RENDER_SETTLED_ATTRIBUTE));
+  map.on('rendercomplete', () => markRenderSettled(map, mapContainer));
+};
+
 interface MapErrorMessage {
   title: string;
   message: string;
@@ -168,6 +184,7 @@ export function useMapBlock(config: MapBlockConfig, events: MapBlockEvents) {
       interactions: defaultInteractions({ doubleClickZoom: false }),
       moveTolerance: 8, // Prevents micro-panning from suppressing click events
     });
+    trackRenderSettled(mapInstance, mapContainer);
 
     baseLayer = useBaseLayer(mapInstance, config.provider, () => showProviderError());
     mapViewControls = useMapViewControls(mapInstance);

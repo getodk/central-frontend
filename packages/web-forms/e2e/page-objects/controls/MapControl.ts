@@ -85,7 +85,7 @@ export class MapControl {
     for (let i = 0; i < times; i++) {
       await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.page.waitForTimeout(ANIMATION_TIME);
+      await this.waitForMapToSettle(mapComponent);
     }
   }
 
@@ -95,7 +95,7 @@ export class MapControl {
     for (let i = 0; i < times; i++) {
       await button.click();
       // Allows reaching the expected zoom level before zooming again for consistent results.
-      await this.page.waitForTimeout(ANIMATION_TIME);
+      await this.waitForMapToSettle(mapComponent);
     }
   }
 
@@ -126,7 +126,7 @@ export class MapControl {
     await this.page.keyboard.press('Escape');
     await expect(mapComponent.locator('.map-full-screen')).not.toBeVisible();
     // Leaving full screen refits the map to its features with an animation.
-    await this.page.waitForTimeout(ANIMATION_TIME);
+    await this.waitForMapToSettle(mapComponent);
   }
 
   /**
@@ -197,15 +197,23 @@ export class MapControl {
     });
   }
 
-  private async waitForMapToSettle() {
-    // It cannot disable map's JS animations. So setting timeout.
-    await this.page.waitForTimeout(ANIMATION_TIME);
+  private async waitForNextPaint(map: Locator) {
+    await map.evaluate(
+      () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)))
+    );
+  }
+
+  private async waitForMapToSettle(mapComponent: Locator) {
+    const map = mapComponent.locator(this.MAP_SELECTOR);
+    // An action triggered just before needs a frame to start moving the map.
+    await this.waitForNextPaint(map);
+    await expect(map).toHaveAttribute('data-render-settled');
     await this.page.waitForLoadState('networkidle');
   }
 
   async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
     const map = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
-    await this.waitForMapToSettle();
+    await this.waitForMapToSettle(mapComponent);
     await this.redrawMap(map);
 
     if (isFullScreen) {
