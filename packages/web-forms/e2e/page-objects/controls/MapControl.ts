@@ -5,6 +5,8 @@ const matchSettledCountOtherThan = (settledCount: string | null) => {
   return new RegExp(`^(?!${settledCount}$)\\d+$`);
 };
 
+const SCREENSHOT_RETRY_TIMEOUT = 5000;
+
 export class MapControl {
   private readonly MAP_COMPONENT_SELECTOR = '.map-block-component';
   private readonly MAP_CONTAINER_SELECTOR = '.map-container';
@@ -261,9 +263,11 @@ export class MapControl {
     );
   }
 
-  async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
-    const map = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
-    await this.waitForMapToSettle(mapComponent);
+  private async expectRedrawnMapScreenshot(
+    map: Locator,
+    screenshotName: string,
+    isFullScreen: boolean
+  ) {
     await this.redrawMap(map);
 
     if (isFullScreen) {
@@ -277,6 +281,15 @@ export class MapControl {
       screenshotName,
       width: 802,
       height: 507,
+    });
+  }
+
+  async expectMapScreenshot(mapComponent: Locator, screenshotName: string, isFullScreen = false) {
+    const map = mapComponent.locator(this.MAP_CONTAINER_SELECTOR);
+    await this.waitForMapToSettle(mapComponent);
+    // A redraw while tiles still fade in leaves tiles from other zoom levels, so it is retried.
+    await expect(() => this.expectRedrawnMapScreenshot(map, screenshotName, isFullScreen)).toPass({
+      timeout: SCREENSHOT_RETRY_TIMEOUT,
     });
   }
 }
