@@ -38,7 +38,7 @@ describe('TriggerableDagTest.java', () => {
     { castReadonlyExpressionsAsNumber: false },
     { castReadonlyExpressionsAsNumber: true },
   ])(
-    'readonly (cast readonly expression as number: $castReadonlyExpressionAsNumber)',
+    'readonly (cast readonly expression as number: $castReadonlyExpressionsAsNumber)',
     ({ castReadonlyExpressionsAsNumber }) => {
       let testFn: typeof it | typeof it.fails;
 
