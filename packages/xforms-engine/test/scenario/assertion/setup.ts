@@ -5,4 +5,3 @@ import './extensions/choices.ts';
 import './extensions/form-state.ts';
 import './extensions/node-state.ts';
 import './extensions/submission.ts';
-import './extensions/tree-reference.ts';
