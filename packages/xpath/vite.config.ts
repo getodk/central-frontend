@@ -34,13 +34,13 @@ const TEST_ENVIRONMENT = BROWSER_ENABLED ? 'node' : 'jsdom';
  * The default time zone for every test evaluator. Many datetime tests expect
  * hard-coded values in this zone, so it is pinned here and never read from the
  * environment: the suite gives the same results on any machine.
- * 
+ *
  * The zone does not observe daylight saving time. Tests for other zones
  * (including DST) pass their own `timeZoneId` to the test context.
  */
 const TEST_TIME_ZONE = 'America/Phoenix';
 
-export default defineConfig(({ mode }) => {
+export default defineConfig(() => {
   // `expressionParser.ts` is built as a separate entry so it can be consumed
   // directly (once instantiated, with top-level await in its containin module)
   // where the same parser instance is used downstream for static analysis.
@@ -76,7 +76,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     define: {
-      TZ: JSON.stringify(TEST_TIME_ZONE)
+      TZ: JSON.stringify(TEST_TIME_ZONE),
     },
     esbuild: {
       target: 'esnext',
