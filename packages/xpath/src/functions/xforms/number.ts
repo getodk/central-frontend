@@ -7,6 +7,7 @@ import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
 import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
 import { Temporal } from 'temporal-polyfill';
+import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
 
 const EPOCH = Temporal.PlainDate.from('1970-01-01');
 
@@ -69,23 +70,30 @@ export const number = new FunctionImplementation(
     if (type === 'NODE' || type === 'STRING') {
       const stringValue = results.toString();
       if (ISO_DATE_LIKE_PATTERN.test(stringValue)) {
-        const date = Temporal.PlainDate.from(stringValue);
-        const days = date.since(EPOCH, { largestUnit: 'days' }).days;
-        return new NumberEvaluation(context, days);
+        try {
+          const date = Temporal.PlainDate.from(stringValue);
+          const days = date.since(EPOCH, { largestUnit: 'days' }).days;
+          return new DateLikeEvaluation(context, date, {
+            booleanValue: true,
+            stringValue: String(days),
+          });
+        } catch {
+          // fall through
+        }
       }
 
-      let dateTime;
       try {
-        dateTime = dateTimeFromString(context.timeZone, stringValue);
+        const dateTime = dateTimeFromString(context.timeZone, stringValue);
+        if (dateTime != null) {
+          return new DateTimeLikeEvaluation(context, dateTime, {
+            booleanValue: true,
+            stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
+          });
+        }
       } catch {
         // not a valid date - fall through
       }
-      if (dateTime != null) {
-        return new DateTimeLikeEvaluation(context, dateTime, {
-          booleanValue: true,
-          stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
-        });
-      }
+
       if (stringValue.includes(',')) {
         return new NumberEvaluation(context, parseCommaDecimal(stringValue));
       }

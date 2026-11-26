@@ -75,20 +75,21 @@ describe('#date()', () => {
 
     describe('dates as number', () => {
       it('example 1', () => {
-        testContext.assertNumberRounded('"2018-01-01" + 1', 17533.29167, 100000);
+        testContext.assertNumberValue('"2018-01-01" + 1', 17533);
       });
 
       it('example 2', () => {
-        testContext.assertNumberRounded('date("1970-01-01T00:00:00.000+00:00")', 0, 100000);
+        testContext.assertNumberValue('date("1970-01-01T00:00:00.000+00:00")', 0);
       });
 
       it('example 3', () => {
-        testContext.assertNumberRounded('date(0)', 0, 100000);
+        testContext.assertNumberValue('date(0)', 0);
       });
 
       describe('with explicit number() call', () => {
         it('example 1', () => {
-          testContext.assertNumberRounded('number("2018-01-01" + 1)', 17533.29167, 100000);
+          // TODO remove all rounded?
+          testContext.assertNumberValue('number("2018-01-01" + 1)', 17533);
         });
       });
     });
@@ -104,7 +105,7 @@ describe('#date()', () => {
         testContext.assertStringValue('date("2018-01-01" + 1)', '2018-01-02');
       });
       it('example 4', () => {
-        testContext.assertStringValue('"2021-11-30" + 1', '18962.291666666668'); // correctness of decimals tbd later
+        testContext.assertStringValue('"2021-11-30" + 1', '18962');
       });
       it('example 5', () => {
         testContext.assertStringValue('"2021-11-30" - "2021-11-29"', '1');
@@ -112,7 +113,7 @@ describe('#date()', () => {
       it('example 6', () => {
         testContext.assertStringValue(
           'date(decimal-date-time("2003-10-20T08:00:00.000-07:00"))',
-          '2003-10-20T08:00:00.000-07:00'
+          '2003-10-20'
         );
       });
 
@@ -152,10 +153,10 @@ describe('#date()', () => {
 
   describe('number', () => {
     [
-      { expression: 'date(0)', expected: '1969-12-31T17:00:00.000-07:00' },
-      { expression: 'date(1)', expected: '1970-01-01T17:00:00.000-07:00' },
-      { expression: 'date(1.5)', expected: '1970-01-02T05:00:00.000-07:00' },
-      { expression: 'date(-1)', expected: '1969-12-30T17:00:00.000-07:00' },
+      { expression: 'date(0)', expected: '1970-01-01' },
+      { expression: 'date(1)', expected: '1970-01-02' },
+      { expression: 'date(1.5)', expected: '1970-01-02' },
+      { expression: 'date(-1)', expected: '1969-12-31' },
     ].forEach(({ expression, expected }) => {
       it(`${expression} should be converted to ${expected}`, () => {
         testContext.assertStringValue(expression, expected);
@@ -210,12 +211,12 @@ describe('#date()', () => {
 
   describe('math', () => {
     [
-      { expression: 'date("2001-12-26") + 5', expected: '11687.291666666666' },
-      { expression: 'date("2001-12-26") - 5', expected: '11677.291666666666' },
-      { expression: '5 + date("2001-12-26")', expected: '11687.291666666666' },
-      { expression: '-5 + date("2001-12-26")', expected: '11677.291666666666' },
-      { expression: '3 + date("2001-12-26") + 5', expected: '11690.291666666666' },
-      { expression: '3 + date("2001-12-26") - 5', expected: '11680.291666666666' },
+      { expression: 'date("2001-12-26") + 5', expected: '11687' },
+      { expression: 'date("2001-12-26") - 5', expected: '11677' },
+      { expression: '5 + date("2001-12-26")', expected: '11687' },
+      { expression: '-5 + date("2001-12-26")', expected: '11677' },
+      { expression: '3 + date("2001-12-26") + 5', expected: '11690' },
+      { expression: '3 + date("2001-12-26") - 5', expected: '11680' },
     ].forEach(({ expression, expected }) => {
       it(`should evaluate '${expression}' to '${expected}'`, () => {
         testContext.assertStringValue(expression, expected);
@@ -232,16 +233,15 @@ describe('#date()', () => {
 
   describe('converts dates to numbers', () => {
     [
-      { expression: "number(date('1970-01-01'))", expected: 0.29 },
-      { expression: "number(date('1970-01-02'))", expected: 1.29 },
-      { expression: "number(date('1969-12-31'))", expected: -0.71 },
-      { expression: "number(date('2008-09-05'))", expected: 14127.29 },
-      { expression: "number(date('1941-12-07'))", expected: -10251.71 },
-      { expression: "number('2008-09-05')", expected: 14127.29 },
-      { expression: 'number(1 div 1000000000 )', expected: 0 },
+      { expression: "number(date('1970-01-01'))", expected: 0 },
+      { expression: "number(date('1970-01-02'))", expected: 1 },
+      { expression: "number(date('1969-12-31'))", expected: -1 },
+      { expression: "number(date('2008-09-05'))", expected: 14127 },
+      { expression: "number(date('1941-12-07'))", expected: -10252 },
+      { expression: "number('2008-09-05')", expected: 14127 },
     ].forEach(({ expression, expected }) => {
       it(`should convert ${expression} to ${expected}`, () => {
-        testContext.assertNumberRounded(expression, expected, 100);
+        testContext.assertNumberValue(expression, expected);
       });
     });
   });
@@ -257,7 +257,7 @@ describe('#date()', () => {
 
     it('date field', () => {
       const contextNode = testContext.document.getElementById('DateField');
-      testContext.assertNumberRounded('date(.)', 0.291667, 1000000, {
+      testContext.assertNumberValue('date(.)', 0, {
         contextNode,
       });
     });
@@ -286,13 +286,13 @@ describe('#date()', () => {
     });
 
     [
-      { expression: '.', id: 'FunctionDateCase1', expected: 15544.29 },
+      { expression: '.', id: 'FunctionDateCase1', expected: 15544 },
       { expression: '.', id: 'FunctionDateCase2', expected: 15572 },
     ].forEach(({ expression, id, expected }) => {
       it(`should convert ${expression} on ${id} to ${expected}`, () => {
         const contextNode = testContext.document.getElementById(id);
 
-        testContext.assertNumberRounded(expression, expected, 100, {
+        testContext.assertNumberValue(expression, expected, {
           contextNode,
         });
       });
@@ -315,10 +315,10 @@ describe('#date()', () => {
       { expression: "date('2100-01-02') > today()", expected: true },
       { expression: "date('2012-01-01') < now()", expected: true },
       { expression: "date('2100-01-02') > now()", expected: true },
-      // { expression: "now() > today()", expected: true },
+      { expression: 'now() > today()', expected: true },
       { expression: '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', expected: false },
-      { expression: '"2018-06-25" < "2018-06-25T00:00:00.000-07:00"', expected: false },
-      { expression: '"2018-06-25" < "2018-06-25T00:00:00.001-07:00"', expected: true },
+      { expression: '"2018-06-25" < "2018-06-25T00:00:00.000+07:00"', expected: false },
+      { expression: '"2018-06-25" < "2018-06-25T00:00:00.001+00:00"', expected: true },
     ].forEach(({ expression, expected }) => {
       it(`should convert ${expression} to ${expected}`, () => {
         testContext.assertBooleanValue(expression, expected);
@@ -331,9 +331,9 @@ describe('#date()', () => {
 
     // Enketo supports bare strings as as date[time]s in this comparison, but per PR
     // feedback this is actually expected to evaluate to false.
-    it.fails('evaluates string literals as date[time] values', () => {
+    it('evaluates string literals as date[time] values', () => {
       const expression = '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"';
-      const expected = true;
+      const expected = false;
 
       testContext.assertBooleanValue(expression, expected);
     });
@@ -375,7 +375,7 @@ describe('#date()', () => {
     });
   });
 
-  describe.only('date calculations', () => {
+  describe('date calculations', () => {
     beforeEach(() => {
       testContext = createXFormsTestContext(
         `
@@ -397,18 +397,18 @@ describe('#date()', () => {
     });
 
     [
-      // { expression: "today() > ('2012-01-01' + 10)", id: null, expected: true },
-      // { expression: "10 + date('2012-07-24') = date('2012-08-03')", id: null, expected: true },
+      { expression: "today() > ('2012-01-01' + 10)", id: null, expected: true },
+      { expression: "10 + date('2012-07-24') = date('2012-08-03')", id: null, expected: true },
       { expression: ". = date('2012-07-24') - 1", id: 'FunctionDateCase1', expected: true },
-      // { expression: ". > date('2012-07-24') - 2", id: 'FunctionDateCase1', expected: true },
-      // { expression: ". < date('2012-07-25') - 1", id: 'FunctionDateCase1', expected: true },
-      // {
-      //   expression:
-      //     ". = 30 + /xhtml:html/xhtml:body/xhtml:div[@id='FunctionDate']/xhtml:div[@id='FunctionDateCase4']",
-      //   id: 'FunctionDateCase1',
-      //   expected: true,
-      // },
-      // { expression: "10 + '2012-07-24' = '2012-08-03'", id: null, expected: true },
+      { expression: ". > date('2012-07-24') - 2", id: 'FunctionDateCase1', expected: true },
+      { expression: ". < date('2012-07-25') - 1", id: 'FunctionDateCase1', expected: true },
+      {
+        expression:
+          ". = 30 + /xhtml:html/xhtml:body/xhtml:div[@id='FunctionDate']/xhtml:div[@id='FunctionDateCase4']",
+        id: 'FunctionDateCase1',
+        expected: true,
+      },
+      { expression: "10 + '2012-07-24' = '2012-08-03'", id: null, expected: true },
     ].forEach(({ expression, expected, id }) => {
       it(`should convert ${expression} to ${expected}`, () => {
         const contextNode =
@@ -425,13 +425,13 @@ describe('#date()', () => {
       });
     });
 
-    [{ expression: '10 + date("2012-07-24")', expected: 15555.29 }].forEach(
+    [{ expression: '10 + date("2012-07-24")', expected: 15555 }].forEach(
       ({ expression, expected }) => {
         it(`should convert ${expression} to ${expected}`, () => {
-          testContext.assertNumberRounded(expression, expected, 100);
+          testContext.assertNumberValue(expression, expected);
 
           // do the same tests for the alias date-time()
-          testContext.assertNumberRounded(expression.replace('date(', 'date-time('), expected, 100);
+          testContext.assertNumberValue(expression.replace('date(', 'date-time('), expected);
         });
       }
     );

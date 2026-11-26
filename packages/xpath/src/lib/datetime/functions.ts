@@ -4,6 +4,7 @@ export const currentLocalDateTimeString = (timeZone: Temporal.TimeZoneLike): str
   return localDateTimeString(now(timeZone));
 };
 
+// TODO hopefully we can kill this hack?
 export const localDateTimeString = (dateTime: Temporal.ZonedDateTime): string => {
   const resultDateTime = dateTime
     .toPlainDateTime()
@@ -14,6 +15,7 @@ export const localDateTimeString = (dateTime: Temporal.ZonedDateTime): string =>
   return `${resultDateTime}${dateTime.offset}`;
 };
 
+// TODO hopefully we can kill this hack?
 export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): string => {
   const dateTimeString = localDateTimeString(dateTime);
 

@@ -88,7 +88,6 @@ export class BooleanBinaryExpressionEvaluator<
 
     const lhsResult = lhs.evaluate(context);
     const rhsResult = rhs.evaluate(context);
-    console.log({ lhsResult, rhsResult } );
 
     return new BooleanEvaluation(context.currentContext(), lhsResult[operator](rhsResult));
   }
