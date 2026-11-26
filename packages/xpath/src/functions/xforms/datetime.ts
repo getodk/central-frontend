@@ -299,11 +299,16 @@ export const decimalDateTime = new NumberFunction(
   [{ arityType: 'required' }],
   (context, [expression]) => {
     const results = expression!.evaluate(context);
-    const { timeZone } = context;
-    const dateTime = dateTimeFromString(timeZone, results.toString());
+    const dateTime = evaluateDateTime(context, results);
 
     if (dateTime == null) {
       return NaN;
+    }
+
+    if (dateTime instanceof Temporal.PlainDate) {
+      const epoch = Temporal.PlainDate.from('1970-01-01'); // keeps coming up....
+      const days = dateTime.since(epoch, { largestUnit: 'days' }).days;
+      return days;
     }
     return dateTime.epochMilliseconds / DAY_MILLISECONDS;
   }

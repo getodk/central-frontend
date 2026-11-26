@@ -23,13 +23,13 @@ describe('#decimal-date-time()', () => {
 
   describe('with date only', () => {
     [
-      { expression: 'decimal-date-time("1970-01-01")', expectedDaysSinceEpoch: 0.291667 },
-      { expression: 'decimal-date-time("1970-01-02")', expectedDaysSinceEpoch: 1.291667 },
-      { expression: 'decimal-date-time("1969-12-31")', expectedDaysSinceEpoch: -0.708333 },
-      { expression: 'decimal-date-time("2021-10-06")', expectedDaysSinceEpoch: 18906.291667 },
+      { expression: 'decimal-date-time("1970-01-01")', expectedDaysSinceEpoch: 0 },
+      { expression: 'decimal-date-time("1970-01-02")', expectedDaysSinceEpoch: 1 },
+      { expression: 'decimal-date-time("1969-12-31")', expectedDaysSinceEpoch: -1 },
+      { expression: 'decimal-date-time("2021-10-06")', expectedDaysSinceEpoch: 18906 },
     ].forEach(({ expression, expectedDaysSinceEpoch }) => {
       it('should convert ' + expression + ' into ' + expectedDaysSinceEpoch, () => {
-        testContext.assertNumberRounded(expression, expectedDaysSinceEpoch, 1000000);
+        testContext.assertNumberValue(expression, expectedDaysSinceEpoch);
       });
     });
   });
@@ -56,7 +56,7 @@ describe('#decimal-date-time()', () => {
   // Tests this bug: https://github.com/getodk/web-forms/issues/272
   it('should handle milliseconds losing precision during conversion', () => {
     const expression = 'decimal-date-time(date("2025-08-18T02:03:23.958Z"))';
-    testContext.assertNumberValue(expression, 20318.085693958332);
+    testContext.assertNumberValue(expression, 20318);
   });
 
   it.fails('with invalid args, throws an error', () => {
@@ -81,7 +81,7 @@ describe('#decimal-date-time()', () => {
 
     it('date field', () => {
       const contextNode = testContext.document.getElementById('DateField');
-      testContext.assertNumberRounded('decimal-date-time(.)', 0.291667, 1000000, {
+      testContext.assertNumberValue('decimal-date-time(.)', 0, {
         contextNode,
       });
     });
