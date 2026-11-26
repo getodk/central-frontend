@@ -238,7 +238,7 @@ test.describe('All Question Types - Geolocation permission denied', () => {
   test('select from map displays error when zooming to current location', async () => {
     const mapComponent = formPage.map.getMapComponentLocator('Map');
     await formPage.map.scrollMapIntoView(mapComponent);
-    await formPage.map.centerCurrentLocation(mapComponent);
+    await formPage.map.requestCurrentLocation(mapComponent);
     await formPage.map.expectErrorMessage(
       mapComponent,
       'Cannot access location',
