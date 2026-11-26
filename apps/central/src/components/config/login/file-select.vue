@@ -205,6 +205,20 @@ const del = () => {
       "post": "图片已成功保存。",
       "del": "图片已成功移除。"
     }
+  },
+  "zh-Hant": {
+    "select": {
+      "full": "將圖片拖曳至此或{upload}",
+      "upload": "上傳檔案"
+    },
+    "action": {
+      "remove": "移除圖片"
+    },
+    "alert": {
+      "invalidType": "不接受此檔案類型。",
+      "post": "圖片已成功儲存。",
+      "del": "圖片已成功移除。"
+    }
   }
 }
 </i18n>

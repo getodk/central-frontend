@@ -105,7 +105,6 @@ import useDataView from '../../composables/data-view';
 import useQueryRef from '../../composables/query-ref';
 import useDateRangeQueryRef from '../../composables/date-range-query-ref';
 import useRequest from '../../composables/request';
-import useProject from '../../request-data/project';
 import { apiPaths, requestAlertMessage } from '../../util/request';
 import { odataEntityToRest } from '../../util/odata';
 import { joinSentences } from '../../util/i18n';
@@ -155,7 +154,6 @@ export default {
     // The dataset request object is how we get access to the
     // dataset properties for the columns.
     const { dataset, deletedEntityCount, odataEntities, entityCreators } = useRequestData();
-    const { fieldKeys, formSummaryAssignments } = useProject();
 
     const { t } = useI18n();
 
@@ -200,19 +198,12 @@ export default {
         creatorIds.value = [...entityCreators.ids];
     });
 
-    // viewAs will reset to null if it can't find a matching actorId
-    // but it will use it in the first request for entities.
     const viewAs = useQueryRef({
       fromQuery: (query) => {
         if (!/^[1-9]\d*$/.test(query.viewAs)) return null;
-        const id = Number.parseInt(query.viewAs, 10);
-        return !fieldKeys.dataExists || fieldKeys.data.some(fieldKey => fieldKey.id === id) ? id : null;
+        return Number.parseInt(query.viewAs, 10);
       },
       toQuery: (value) => ({ viewAs: value != null ? value.toString() : null })
-    });
-    watch(() => fieldKeys.dataExists, () => {
-      if (viewAs.value != null && !fieldKeys.data.some(fieldKey => fieldKey.id === viewAs.value))
-        viewAs.value = null;
     });
 
     const creationDateRange = useDateRangeQueryRef();
@@ -221,8 +212,7 @@ export default {
     const { request } = useRequest();
 
     return {
-      dataset, deletedEntityCount, odataEntities, entityCreators, fieldKeys,
-      formSummaryAssignments,
+      dataset, deletedEntityCount, odataEntities, entityCreators,
       searchTerm, creatorIds, creationDateRange, conflict, viewAs,
       dataView, viewOptions,
       request,
@@ -349,8 +339,6 @@ export default {
   },
   created() {
     this.fetchCreators();
-    this.fetchFieldKeys();
-    this.fetchPublicLinkAssignments();
   },
   methods: {
     resetFilters() {
@@ -375,17 +363,6 @@ export default {
     fetchCreators() {
       this.entityCreators.request({
         url: apiPaths.entityCreators(this.projectId, this.datasetName)
-      }).catch(noop);
-    },
-    fetchFieldKeys() {
-      this.fieldKeys.request({
-        url: apiPaths.fieldKeys(this.projectId)
-      }).catch(noop);
-    },
-    fetchPublicLinkAssignments() {
-      this.formSummaryAssignments.request({
-        url: apiPaths.formSummaryAssignments(this.projectId, 'pub-link'),
-        extended: true
       }).catch(noop);
     },
     showUpdate(entity) {
@@ -705,7 +682,8 @@ export default {
     "actionBar": {
       "message": "{count} Objekt ausgewählt | {count} Objekte ausgewählt"
     },
-    "bulkOpInProgress": "Massenbearbeitung in Bearbeitung"
+    "bulkOpInProgress": "Massenbearbeitung in Bearbeitung",
+    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
   },
   "es": {
     "noEntities": "No hay Entidades para mostrar.",
@@ -728,7 +706,8 @@ export default {
     "actionBar": {
       "message": "{count} Entidad seleccionada | {count} Entidades seleccionadas | {count} Entidades seleccionadas"
     },
-    "bulkOpInProgress": "Operación masiva en curso"
+    "bulkOpInProgress": "Operación masiva en curso",
+    "analyzeDisabledDeletedData": "El acceso OData no está disponible para Entidades eliminadas"
   },
   "fr": {
     "noEntities": "Pas d'entités à montrer.",
@@ -751,7 +730,8 @@ export default {
     "actionBar": {
       "message": "{count} entité sélectionnée | {count} entités sélectionnées | {count} entités sélectionnées"
     },
-    "bulkOpInProgress": "Opération en masse en progrès"
+    "bulkOpInProgress": "Opération en masse en progrès",
+    "analyzeDisabledDeletedData": "L'accès OData n'est pas disponible pour les entités supprimées"
   },
   "it": {
     "noEntities": "Non ci sono entità da mostrare.",
@@ -774,7 +754,8 @@ export default {
     "actionBar": {
       "message": "{count} Entità selezionata | {count} Entità selezionate | {count} Entità selezionate"
     },
-    "bulkOpInProgress": "Elaborazione di massa in corso"
+    "bulkOpInProgress": "Elaborazione di massa in corso",
+    "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
   },
   "pt": {
     "noEntities": "Não há Entidades para mostrar.",
@@ -796,7 +777,8 @@ export default {
     },
     "actionBar": {
       "message": "{count} Entidade selecionada | {count} Entidades selecionadas | {count} Entidades selecionadas"
-    }
+    },
+    "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
   },
   "sw": {
     "noEntities": "Hakuna Fomu za kuonyesha.",
@@ -823,7 +805,8 @@ export default {
     "actionBar": {
       "message": "已选择{count}个实体"
     },
-    "bulkOpInProgress": "批量操作执行中"
+    "bulkOpInProgress": "批量操作执行中",
+    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
   },
   "zh-Hant": {
     "noEntities": "沒有可顯示的實體。",
@@ -846,7 +829,8 @@ export default {
     "actionBar": {
       "message": "已選取{count}個實體"
     },
-    "bulkOpInProgress": "正在執行大量作業"
+    "bulkOpInProgress": "正在執行大量作業",
+    "analyzeDisabledDeletedData": "已刪除實體的 OData 存取不可用"
   }
 }
 </i18n>

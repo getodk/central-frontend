@@ -48,12 +48,6 @@ const mountComponent = ({
 };
 
 describe('EntityFiltersViewAs', () => {
-  it('does not render the select if the dataset has no access filter', () => {
-    testData.extendedDatasets.createPast(1, { accessFilter: null });
-    const component = mountComponent({ fieldKeys: createFieldKeys(1) });
-    component.find('select').exists().should.be.false;
-  });
-
   describe('app users', () => {
     it('renders a single-select input for each app user', async () => {
       const fieldKeys = createFieldKeys(2);
@@ -357,6 +351,13 @@ describe('EntityFiltersViewAs', () => {
         props: { modelValue: null }
       });
       component.get('.display-value').text().should.equal('All');
+    });
+
+    it('resets the selection if the actor ID is not in the options', () => {
+      const component = mountComponent({
+        props: { modelValue: 99999 }
+      });
+      component.emitted('update:modelValue').should.eql([[null]]);
     });
 
     it('shows default label if the actor id is not in the field keys list', () => {

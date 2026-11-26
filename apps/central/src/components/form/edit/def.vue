@@ -114,10 +114,12 @@ const afterUpload = () => {
     "changed": "Mudanças em relação à versão publicada"
   },
   "zh": {
+    "title": "草稿版本：{version}",
     "subtitle": "已上传",
     "changed": "自发布版本以来"
   },
   "zh-Hant": {
+    "title": "草稿版本：{version}",
     "subtitle": "已上傳",
     "changed": "與發布版本相比有變更"
   }

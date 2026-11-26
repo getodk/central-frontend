@@ -173,6 +173,45 @@ export class MapControl {
     await this.moveMapAndWaitToSettle(mapComponent, () => button.click());
   }
 
+  async openBaseLayerPicker(mapComponent: Locator) {
+    const button = mapComponent.getByRole('button', { name: 'Change map layer' });
+    await expect(button).toBeVisible();
+    await button.click();
+    await expect(mapComponent.locator('.base-layer-options')).toBeVisible();
+  }
+
+  async selectBaseLayer(mapComponent: Locator, layerName: string) {
+    const option = mapComponent.locator('.base-layer-options').getByRole('option', {
+      name: layerName,
+      exact: true,
+    });
+    await expect(option).toBeVisible();
+    await option.click();
+  }
+
+  async closeBaseLayerPicker(mapComponent: Locator) {
+    await this.page.keyboard.press('Escape');
+    await expect(mapComponent.locator('.base-layer-options')).not.toBeVisible();
+  }
+
+  async searchPlace(mapComponent: Locator, query: string) {
+    const input = mapComponent.locator('.map-place-search input');
+    await expect(input).toBeVisible();
+    await input.fill(query);
+    await input.press('Enter');
+    await expect(mapComponent.locator('.search-results')).toBeVisible();
+  }
+
+  async selectPlace(mapComponent: Locator, placeName: string) {
+    const option = mapComponent.locator('.search-results').getByRole('option', {
+      name: placeName,
+      exact: true,
+    });
+    await expect(option).toBeVisible();
+    await option.click();
+    await expect(mapComponent.locator('.search-results')).not.toBeVisible();
+  }
+
   async closeProperties(mapComponent: Locator) {
     const button = mapComponent.locator('.map-properties .close-icon');
     await expect(button).toBeVisible();

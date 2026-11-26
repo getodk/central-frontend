@@ -85,6 +85,7 @@
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "Importar datos",
         "bulk_delete": "Eliminación masiva",
         "bulk_restore": "Restauración masiva"
       },
@@ -172,6 +173,7 @@
     "refreshPage": "Refresque la página",
     "resetPassword": "Restablecer contraseña",
     "review": "Revisar",
+    "revoke": "Revocar",
     "save": "Guardar",
     "saveSettings": "Guardar las configuraciónes",
     "sort": "Ordenar",
@@ -187,7 +189,6 @@
     "reset": "Restablecer",
     "change": "Cambiar",
     "upload": "Subir",
-    "reviewParallelUpdates": "Revisar actualizaciones paralelas",
     "restore": "Restablecer"
   },
   "field": {
@@ -361,11 +362,12 @@
     "totalEntities": "Entidades totales",
     "versionShort": "v{version}",
     "warning": "Advertencia",
-    "recommended": "recomendado",
+    "recommended": "Recomendado",
     "none": "(ninguno)",
     "search": "Buscar",
     "useEnketo": "Modo de compatibilidad de Enketo",
     "updateInProgress": "Solicitud de actualización en curso",
+    "preview": "Vista previa",
     "reviewState": "Estado de revisión",
     "status": "Estado",
     "version": "Versión",
@@ -413,11 +415,6 @@
   },
   "router": {
     "unsavedChanges": "¿Está seguro que desea abandonar esta página? Puede que no se guarden sus cambios."
-  },
-  "formStateDescription": {
-    "open": "Este formulario se puede descargar y acepta envíos.",
-    "closing": "Este formulario no se puede descargar perro acepta envíos.",
-    "closed": "Este formulario no se puede descargar y no acepta envíos."
   },
   "requestData": {
     "project": {

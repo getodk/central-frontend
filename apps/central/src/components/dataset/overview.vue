@@ -71,8 +71,8 @@ const afterCreateProperty = () => {
   "en": {
     // This is a title shown above a section of the page.
     "entityProperties" : "Entity Properties",
-    // This is shown on a button for creating new Entity Properties
-    "new": "New",
+    // This is shown on a button for creating a new Entity property.
+    "new": "New property"
   }
 }
 </i18n>
@@ -84,35 +84,29 @@ const afterCreateProperty = () => {
     "entityProperties": "Vlastnosti entity"
   },
   "de": {
-    "entityProperties": "Objekteigenschaften",
-    "new": "Neu"
+    "entityProperties": "Objekteigenschaften"
   },
   "es": {
-    "entityProperties": "Propiedades de la entidad",
-    "new": "Nueva"
+    "entityProperties": "Propiedades de la entidad"
   },
   "fr": {
     "entityProperties": "Propriétés",
-    "new": "Nouvelle"
+    "new": "Nouvelle propriété"
   },
   "it": {
-    "entityProperties": "Proprietà della Entità",
-    "new": "Nuova"
+    "entityProperties": "Proprietà della Entità"
   },
   "pt": {
-    "entityProperties": "Propriedades da Entidade",
-    "new": "Nova"
+    "entityProperties": "Propriedades da Entidade"
   },
   "sw": {
     "entityProperties": "Sifa za Mashirika"
   },
   "zh": {
-    "entityProperties": "实体属性",
-    "new": "更新"
+    "entityProperties": "实体属性"
   },
   "zh-Hant": {
-    "entityProperties": "實體屬性",
-    "new": "新增"
+    "entityProperties": "實體屬性"
   }
 }
 </i18n>

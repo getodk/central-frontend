@@ -2,27 +2,27 @@
   "component": {
     "Preview": {
       "formNotFound": {
-        "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+        "string": "Unter dieser URL wurde kein Formular gefunden. Bitte überprüfen Sie die Eingabe."
       }
     },
     "Submission": {
       "formNotFound": {
         "title": {
-          "string": "Für diese URL wurde kein Formular gefunden, bitte überprüfen Sie dies noch einmal."
+          "string": "Formular kann nicht geöffnet werden"
         },
         "body": {
-          "string": ""
+          "string": "Bitte prüfen Sie, ob der Link korrekt ist. Möglicherweise ist das Formular nicht mehr verfügbar oder Ihre Zugriffsberechtigung ist abgelaufen. Sollte das Problem weiterhin bestehen, wenden Sie sich an die Person, die Ihnen den Link zum Formular geschickt hat."
         }
       },
       "errorNotProblem": {
         "title": {
-          "string": "Etwas ging schief"
+          "string": "Es ist ein Fehler aufgetreten"
         },
         "body": {
-          "string": ""
+          "string": "Bitte versuchen Sie es später erneut. Sollte das Problem weiterhin bestehen, wenden Sie sich an die Person, die Ihnen den Link zum Formular geschickt hat."
         },
         "status": {
-          "string": "Fehlercode {status}"
+          "string": "Fehlercode: {status}"
         }
       }
     },
@@ -32,7 +32,21 @@
           "string": "Schließen"
         },
         "tryAgain": {
-          "string": "Nochmals versuchen"
+          "string": "Erneut versuchen"
+        },
+        "recover": {
+          "string": ""
+        },
+        "discard": {
+          "string": ""
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": ""
+        },
+        "body": {
+          "string": ""
         }
       },
       "previewModal": {
@@ -40,33 +54,33 @@
           "string": "Daten sind gültig"
         },
         "body": {
-          "string": "Die von Ihnen eingegebenen Daten sind gültig, aber sie wurden nicht übermittelt, da es sich um eine Formularvorschau handelt."
+          "string": ""
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formular erfolgreich gesendet!"
+          "string": ""
         },
         "body": {
-          "string": "Sie können dieses Formular erneut ausfüllen oder schliessen, wenn Sie fertig sind."
+          "string": ""
         },
         "action": {
           "fillOutAgain": {
-            "string": "Nochmals ausfüllen"
+            "string": ""
           }
         }
       },
       "thankYouModal": {
         "title": {
-          "string": "Vielen Dank für Ihre Teilnahme!"
+          "string": "Vielen Dank für Ihr Mitwirken!"
         },
         "body": {
-          "string": "Sie können dieses Fenster jetzt schliessen."
+          "string": "Sie können dieses Fenster jetzt schließen."
         }
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Übermittlung erfolgreich"
+          "string": ""
         },
         "body": {
           "string": "Sie werden nun weitergeleitet."
@@ -77,15 +91,15 @@
           "string": "Übermittlungsfehler"
         },
         "body": {
-          "string": "Ihre Daten wurden nicht übermittelt. Fehlermeldung: {errorMessage} Sie können dieses Dialogfeld schließen und es erneut versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+          "string": ""
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Übermittlung senden"
+          "string": ""
         },
         "body": {
-          "string": "Ihre Daten werden jetzt übermittelt. Bitte schliessen Sie dieses Fenster nicht, bevor es fertig ist."
+          "string": "Ihre Daten werden jetzt übermittelt. Bitte schließen Sie dieses Fenster nicht, bevor die Übermittlung abgeschlossen ist."
         }
       },
       "sessionTimeoutModal": {
@@ -94,7 +108,7 @@
         },
         "body": {
           "full": {
-            "string": "Bitte {here} in einem anderen Browser-Tab einloggen und erneut versuchen.",
+            "string": "Bitte {here} in einem anderen Fenster einloggen und erneut versuchen.",
             "developer_comment": "{here} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. Its text is:\n\nhere"
           },
           "here": {
@@ -108,17 +122,17 @@
           "string": "Übermittlungsfehler"
         },
         "body": {
-          "string": "Ihre Daten wurden nicht vollständig übermittelt. Bitte drücken Sie die Schaltfläche „Erneut versuchen“, um es noch einmal zu versuchen. Wenn der Fehler weiterhin auftritt, wenden Sie sich bitte an die Person, die Sie gebeten hat, dieses Formular auszufüllen, oder an {supportEmail}."
+          "string": ""
         }
       },
       "util": {
         "request": {
           "noResponse": {
-            "string": "Etwas ging schief: Wir haben keine Antwort auf Ihre Anfrage bekommen."
+            "string": "Es ist ein Fehler aufgetreten: Ihre Anfrage wurde nicht beantwortet."
           },
           "problem": {
             "404_1": {
-              "string": "Die gesuchte Ressource kann nicht gefunden werden. Die Ressource wurde möglicherweise gelöscht."
+              "string": "Die gesuchte Ressource wurde nicht gefunden. Sie wurde möglicherweise gelöscht."
             }
           }
         }
@@ -127,7 +141,7 @@
         "request": {
           "alert": {
             "entityTooLarge": {
-              "string": "Die Daten, die Sie hochzuladen versuchen, sind zu gross."
+              "string": "Die Daten, die Sie hochzuladen versuchen, sind zu groß."
             }
           }
         }

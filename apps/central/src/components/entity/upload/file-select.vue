@@ -13,9 +13,11 @@ except according to the terms contained in the LICENSE file.
   <file-drop-zone id="entity-upload-file-select" :disabled="disabled"
     @drop="$emit('change', $event.dataTransfer.files[0])">
     <div id="entity-upload-file-select-heading">
-      <p v-if="errors !== 0">{{ $tcn('errors', errors) }}</p>
-      <p v-else-if="dataTemplate">{{ $t('upload') }}</p>
-
+      <p>
+        <template v-if="errors !== 0">{{ $tcn('errors', errors) }}</template>
+        <template v-else-if="dataTemplate">{{ $t('upload') }}</template>
+        <template v-else>{{ $t('replace') }}</template>
+      </p>
       <div>
         <i18n-t keypath="text.full">
           <template #chooseFile>
@@ -111,7 +113,8 @@ const changeInput = (event) => {
 {
   "en": {
     "upload": "Upload a .csv file",
-    "errors": "{count} error must be fixed before appending Entities | {count} errors must be fixed before appending Entities",
+    "replace": "Replace data with new file",
+    "errors": "{count} error must be fixed before importing data | {count} errors must be fixed before importing data",
     "text": {
       "full": "Drag and drop a .csv file here, or {chooseFile}",
       "chooseFile": "choose a file"
@@ -125,14 +128,21 @@ const changeInput = (event) => {
 <i18n>
 {
   "de": {
+    "upload": "Eine .csv-Datei hochladen",
+    "text": {
+      "full": "Ziehen Sie eine .csv-Datei hierher oder {chooseFile}",
+      "chooseFile": "wählen Sie eine Datei aus"
+    },
     "parsing": "Daten lesen..."
   },
   "es": {
+    "upload": "Subir un archivo .csv",
     "parsing": "Leyendo datos..."
   },
   "fr": {
     "upload": "Téléverser un fichier .csv",
-    "errors": "{count} erreur doit être résolue avant d'ajouter les entités | {count} erreurs doivent être résolues avant d'ajouter les entités | {count} erreurs doivent être résolues avant d'ajouter les entités",
+    "replace": "Remplacer les données par le nouveau fichier",
+    "errors": "{count} erreur doit être corrigée avant l’importation des données. | {count} erreurs doivent être corrigées avant l’importation des données. | {count} erreurs doivent être corrigées avant l’importation des données.",
     "text": {
       "full": "Glissez un fichier .csv ici, ou {chooseFile}",
       "chooseFile": "choisissez un fichier"
@@ -140,15 +150,30 @@ const changeInput = (event) => {
     "parsing": "Lecture des données..."
   },
   "it": {
+    "upload": "Carica un file .csv",
+    "text": {
+      "full": "Trascina qui un file .csv oppure {chooseFile}",
+      "chooseFile": "scegli un file"
+    },
     "parsing": "Lettura dei dati…"
   },
   "pt": {
     "parsing": "Lendo dados…"
   },
   "zh": {
+    "upload": "上传CSV文件",
+    "text": {
+      "full": "请将 .csv 文件拖放到此处，或{chooseFile}",
+      "chooseFile": "选择一个文件"
+    },
     "parsing": "读取数据..."
   },
   "zh-Hant": {
+    "upload": "上傳 .csv 檔案",
+    "text": {
+      "full": "將 .csv 檔案拖放至此，或{chooseFile}",
+      "chooseFile": "選擇檔案"
+    },
     "parsing": "讀取資料..."
   }
 }

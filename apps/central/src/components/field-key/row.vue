@@ -96,82 +96,47 @@ export default {
 {
   "cs": {
     "seeCode": "Viz kód",
-    "accessRevoked": "Přístup byl zrušen",
-    "action": {
-      "revokeAccess": "Odebrat přístup"
-    }
+    "accessRevoked": "Přístup byl zrušen"
   },
   "de": {
     "seeCode": "QR-Code",
-    "accessRevoked": "Zugriffsberechtigung zurückgezogen",
-    "action": {
-      "revokeAccess": "Zugriffsberechtigung entziehen"
-    }
+    "accessRevoked": "Zugriffsberechtigung zurückgezogen"
   },
   "es": {
     "seeCode": "Ver código",
-    "accessRevoked": "Acceso revocado",
-    "action": {
-      "revokeAccess": "Revocar el acceso"
-    }
+    "accessRevoked": "Acceso revocado"
   },
   "fr": {
     "seeCode": "Voir le code",
-    "accessRevoked": "Accès retiré",
-    "action": {
-      "editAppUser": "Modifier utilisateur mobile",
-      "revokeAccess": "Retirer l'accès"
-    }
+    "accessRevoked": "Accès retiré"
   },
   "id": {
     "seeCode": "Lihat kode",
-    "accessRevoked": "Akses dicabut",
-    "action": {
-      "revokeAccess": "Cabut akses"
-    }
+    "accessRevoked": "Akses dicabut"
   },
   "it": {
     "seeCode": "Mostra il codice",
-    "accessRevoked": "Accesso revocato",
-    "action": {
-      "editAppUser": "Modifica Utente App",
-      "revokeAccess": "Revoca l'accesso utente"
-    }
+    "accessRevoked": "Accesso revocato"
   },
   "ja": {
     "seeCode": "QRコードを表示",
-    "accessRevoked": "アクセス権の取消済み",
-    "action": {
-      "revokeAccess": "アクセス権の取消"
-    }
+    "accessRevoked": "アクセス権の取消済み"
   },
   "pt": {
     "seeCode": "Ver código",
-    "accessRevoked": "Acesso removido",
-    "action": {
-      "revokeAccess": "Remover acesso"
-    }
+    "accessRevoked": "Acesso removido"
   },
   "sw": {
     "seeCode": "Angalia msimbo",
-    "accessRevoked": "Ufikiaji umebatilishwa",
-    "action": {
-      "revokeAccess": "Batilisha ufikiaji"
-    }
+    "accessRevoked": "Ufikiaji umebatilishwa"
   },
   "zh": {
     "seeCode": "查看代码",
-    "accessRevoked": "权限已撤销",
-    "action": {
-      "revokeAccess": "撤销权限"
-    }
+    "accessRevoked": "权限已撤销"
   },
   "zh-Hant": {
     "seeCode": "查看 QR code",
-    "accessRevoked": "存取權限被撤銷",
-    "action": {
-      "revokeAccess": "撤銷存取權限"
-    }
+    "accessRevoked": "存取權限被撤銷"
   }
 }
 </i18n>

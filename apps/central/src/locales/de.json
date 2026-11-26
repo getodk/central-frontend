@@ -66,7 +66,8 @@
         "create": "Erstellen",
         "update": "Details aktualisieren",
         "session_end": "Widerrufen",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "property_set": "Eigenschaft setzen"
       },
       "analytics": "Berichtsnutzung",
       "blobs": {
@@ -84,19 +85,25 @@
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "Daten importieren",
         "bulk_delete": "Massenlöschung",
         "bulk_restore": "Massenwiederherstellung"
+      },
+      "actor_property": {
+        "create": "Benutzerdefinierte Eigenschaft erstellen"
       },
       "field_key": {
         "assignment_create": "Zugriff erteilen",
         "assignment_delete": "Zugriff entziehen",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "form": {
         "update_draft_set": "Entwurf verfassen oder aktualisieren",
         "update_draft_replace": "Ersetzen des Entwurfs",
+        "update_draft_update": "Entwurfseinstellungen aktualisieren",
         "update_publish": "Entwurf veröffentlichen",
         "update_draft_delete": "Entwurf löschen",
         "attachment_update": "Anhänge aktualisieren",
@@ -112,7 +119,8 @@
         "assignment_delete": "Zugriff entziehen",
         "create": "@:audit.action.default.create",
         "session_end": "@:audit.action.default.session_end",
-        "delete": "@:audit.action.default.delete"
+        "delete": "@:audit.action.default.delete",
+        "property_set": "@:audit.action.default.property_set"
       },
       "submission": {
         "purge": "Übermittlungen bereinigen"
@@ -139,6 +147,7 @@
     }
   },
   "action": {
+    "add": "Hinzufügen",
     "cancel": "Abbrechen",
     "clear": "Löschen",
     "close": "Schließen",
@@ -164,6 +173,7 @@
     "refreshPage": "Seite aktualisieren",
     "resetPassword": "Passwort zurücksetzen",
     "review": "Überprüfen",
+    "revoke": "Widerrufen",
     "save": "Speichern",
     "saveSettings": "Einstellungen speichern",
     "sort": "Sortieren",
@@ -177,8 +187,8 @@
     "collapse": "Verkleinern",
     "selectRow": "Zeile auswählen",
     "reset": "Zurücksetzen",
+    "change": "Ändern",
     "upload": "Hochladen",
-    "reviewParallelUpdates": "Parallele Updates überprüfen",
     "restore": "Wiederherstellen"
   },
   "field": {
@@ -189,6 +199,7 @@
     "name": "Name",
     "newPassword": "Neues Passwort",
     "oldPassword": "Altes Passwort",
+    "passphrase": "Verschlüsselungspasswort",
     "password": "Passwort",
     "passwordConfirm": "Neues Passwort (bestätigen)",
     "title": "Titel",
@@ -351,9 +362,12 @@
     "totalEntities": "Objekte insgesamt",
     "versionShort": "v{version}",
     "warning": "Warnung",
-    "recommended": "empfohlen",
+    "recommended": "Empfohlen",
     "none": "(keine)",
     "search": "Suchen",
+    "useEnketo": "Enketo-Kompatibilitätsmodus",
+    "updateInProgress": "Aktualisierung läuft",
+    "preview": "Vorschau",
     "reviewState": "Überprüfungsstatus",
     "status": "Status",
     "version": "Version",
@@ -401,11 +415,6 @@
   },
   "router": {
     "unsavedChanges": "Wollen Sie diese Seite wirklich verlassen? Ihre Änderungen sind noch nicht gespeichert."
-  },
-  "formStateDescription": {
-    "open": "Dieses Formular kann heruntergeladen werden und Übermittlungen werden akzeptiert.",
-    "closing": "Dieses Formular kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert.",
-    "closed": "Dieses Formular kann nicht heruntergeladen werden und Übermittlungen werden nicht akzeptiert."
   },
   "requestData": {
     "project": {

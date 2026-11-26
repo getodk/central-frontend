@@ -85,6 +85,7 @@
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "Importer les données",
         "bulk_delete": "Supprimer sélection",
         "bulk_restore": "Restaurer sélection"
       },
@@ -160,6 +161,7 @@
     "edit": "Éditer",
     "editProfile": "Éditer le profil",
     "finish": "Terminer",
+    "import": "Importer",
     "logIn": "Se connecter",
     "looksGood": "Ça a l'air bon, continuez",
     "more": "Plus",
@@ -172,6 +174,7 @@
     "refreshPage": "Rafraîchir la page",
     "resetPassword": "Réinitialiser le mot de passe",
     "review": "Réviser",
+    "revoke": "Révoquer",
     "save": "Enregistrer",
     "saveSettings": "Enregistrer les réglages",
     "sort": "Trier",
@@ -187,7 +190,6 @@
     "reset": "Réinitialiser",
     "change": "Changer",
     "upload": "Téléverser",
-    "reviewParallelUpdates": "Examiner les mises à jour parallèles",
     "restore": "Restaurer"
   },
   "field": {
@@ -258,6 +260,7 @@
     "property": "Propriété",
     "properties": "Propriétés",
     "publicLink": "Lien d'accès public",
+    "publicLinks": "Liens publics",
     "user": "Utilisateur",
     "users": "Utilisateurs",
     "webUser": "Utilisateur web",
@@ -361,11 +364,12 @@
     "totalEntities": "Nombre d'entités",
     "versionShort": "v {version}",
     "warning": "Avertissement",
-    "recommended": "recommandé",
+    "recommended": "Recommandé",
     "none": "(aucun)",
     "search": "Recherche",
     "useEnketo": "Mode compatibilité Enketo",
     "updateInProgress": "Demande de mise à jour en cours",
+    "preview": "Aperçu",
     "reviewState": "État",
     "status": "Statut",
     "version": "Version",
@@ -413,11 +417,6 @@
   },
   "router": {
     "unsavedChanges": "Êtes vous sûr de vouloir quitter cette page ? Vos modifications n'ont pas été enregistrées."
-  },
-  "formStateDescription": {
-    "open": "Ce formulaire est téléchargeable et accepte les soumissions.",
-    "closing": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions.",
-    "closed": "Ce formulaire n'est pas téléchargeable mais accepte tout de même les soumissions."
   },
   "requestData": {
     "project": {

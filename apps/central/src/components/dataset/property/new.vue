@@ -136,10 +136,7 @@ const submit = () => {
     "introduction": [
       "Pour ajouter une propriété d'Entité, choisissez un nom de propriété unique ci-dessous.",
       "Vous pouvez ajoutez de nouvelles propriétés en téléchargeant un Formulaire qui y fait référence, dans lequel les propriétés sont créées lors de la publication du Formulaire."
-    ],
-    "problem": {
-      "409_3": "Une propriété avec ce nom existe déjà"
-    }
+    ]
   },
   "it": {
     "title": "Aggiungi proprietà della Entità",

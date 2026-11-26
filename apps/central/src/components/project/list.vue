@@ -16,7 +16,7 @@ except according to the terms contained in the LICENSE file.
       <button v-if="currentUser.can('project.create')"
         id="project-list-new-button" type="button" class="btn btn-primary"
         @click="createModal.show()">
-        <span class="icon-plus"></span>{{ $t('action.create') }}&hellip;
+        <span class="icon-plus"></span>{{ $t('action.create') }}
       </button>
     </page-heading>
     <div v-if="projects.dataExists">
@@ -193,7 +193,7 @@ export default {
     "archived": "Archived Projects",
     "action": {
       // This is the text of a button that is used to create a new Project.
-      "create": "New"
+      "create": "New Project"
     },
     "emptyTable": {
       "canCreate": "To get started, create a Project. Projects help you organize your data by grouping related Forms and Users.",
@@ -211,9 +211,6 @@ export default {
 {
   "cs": {
     "archived": "Archivované projekty",
-    "action": {
-      "create": "Nový"
-    },
     "emptyTable": {
       "canCreate": "Chcete-li začít, vytvořte projekt. Projekty vám pomohou uspořádat data seskupením souvisejících formulářů a uživatelů.",
       "cannotCreate": "Neexistují žádné projekty, které by bylo možné zobrazit. Pokud očekáváte, že se zde Projekty zobrazí, obraťte se na osobu, která vám tento účet poskytla. Možná bude potřebovat přiřadit Projektovou roli pro Projekty, které byste měli vidět."
@@ -224,9 +221,6 @@ export default {
   },
   "de": {
     "archived": "Archivierte Projekte",
-    "action": {
-      "create": "Neu"
-    },
     "emptyTable": {
       "canCreate": "Erstellen Sie zunächst ein Projekt. Projekte helfen Ihnen, Ihre Daten zu organisieren, indem Sie verwandte Formulare und Benutzer gruppieren.",
       "cannotCreate": "Es gibt keine anzuzeigenden Projekte. Wenn Sie erwarten, dass Projekte hier angezeigt werden, sprechen Sie mit der Person, die Ihnen dieses Konto gegeben hat. Sie müssen möglicherweise eine Projektrolle für Projekte zuweisen, die Sie sehen sollen."
@@ -237,9 +231,6 @@ export default {
   },
   "es": {
     "archived": "Proyectos archivados",
-    "action": {
-      "create": "Nuevo"
-    },
     "emptyTable": {
       "canCreate": "Para comenzar, cree un Proyecto. Los proyectos lo ayudan a organizar sus datos agrupando formularios y usuarios relacionados.",
       "cannotCreate": "No hay Proyectos para mostrar. Si espera ver Proyectos aquí, hable con la persona que le dio esta cuenta. Es posible que deban asignar un rol de proyecto para los proyectos que se supone que debe ver."
@@ -251,7 +242,7 @@ export default {
   "fr": {
     "archived": "Projets archivés",
     "action": {
-      "create": "Nouveau"
+      "create": "Nouveau projet"
     },
     "emptyTable": {
       "canCreate": "Pour démarrer, créez un Projet. Les projets vous aident à organiser vos données en regroupant des formulaires et des utilisateurs qui sont liés",
@@ -263,18 +254,12 @@ export default {
   },
   "id": {
     "archived": "Proyek Terarsip",
-    "action": {
-      "create": "Baru"
-    },
     "alert": {
       "create": "Proyek baru Anda telah sukses dibuat."
     }
   },
   "it": {
     "archived": "Progetti archiviati",
-    "action": {
-      "create": "Nuovo"
-    },
     "emptyTable": {
       "canCreate": "Per iniziare, crea un progetto. I progetti ti aiutano a organizzare i tuoi dati raggruppando i formulari e gli utenti correlati.",
       "cannotCreate": "Non ci sono progetti da mostrare. Se prevedi di vedere Progetti qui, parla con la persona che ti ha fornito questo account. Potrebbe essere necessario assegnare un ruolo di progetto per i progetti che dovresti vedere."
@@ -284,18 +269,12 @@ export default {
     }
   },
   "ja": {
-    "action": {
-      "create": "新規作成"
-    },
     "alert": {
       "create": "新規プロジェクトは正しく作成されました。"
     }
   },
   "pt": {
     "archived": "Projetos arquivados",
-    "action": {
-      "create": "Novo"
-    },
     "emptyTable": {
       "canCreate": "Para começar, crie um Projeto. Os Projetos ajudam você a organizar seus dados agrupando Formulários e Usuários relacionados.",
       "cannotCreate": "Não há Projetos para mostrar. Se você espera ver Projetos aqui, fale com a pessoa que lhe deu esta conta. Ela pode precisar atribuir uma Função de Projeto nos Projetos que você deve ver."
@@ -306,9 +285,6 @@ export default {
   },
   "sw": {
     "archived": "Miradi Iliyohifadhiwa",
-    "action": {
-      "create": "Mpya"
-    },
     "emptyTable": {
       "canCreate": "Ili kuanza, tengeneza Mradi. Miradi hukusaidia kupanga data yako kwa kupanga Fomu na Watumiaji husika.",
       "cannotCreate": "Hakuna Miradi ya kuonyesha. Ikiwa unatarajia kuona Miradi hapa, zungumza na mtu aliyekupa akaunti hii. Huenda wakahitaji kupeana Jukumu la Mradi kwa Miradi unayopaswa kuona."
@@ -319,9 +295,6 @@ export default {
   },
   "zh": {
     "archived": "已存档的项目",
-    "action": {
-      "create": "更新"
-    },
     "emptyTable": {
       "canCreate": "请先创建一个项目。项目可以帮助您通过将表单分组，和通过用户来管理数据。",
       "cannotCreate": "暂无项目可显示。如果您本应再次拥有项目，请联系为您创建此账户的负责人。对方可能需要为您分配相应的项目角色权限。"
@@ -332,9 +305,6 @@ export default {
   },
   "zh-Hant": {
     "archived": "已歸檔專案",
-    "action": {
-      "create": "新訊息"
-    },
     "emptyTable": {
       "canCreate": "首先，創建一個專案。專案可透過對相關表單和使用者分組來幫助您組織資料。",
       "cannotCreate": "沒有可顯示的專案。如果您希望在此處看到專案，請與向您提供此帳戶的人員聯絡。他們可能需要為您應該看到的專案分配專案角色。"

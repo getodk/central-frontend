@@ -94,6 +94,11 @@ const handleActions = ({ target, data }) => {
   else if (target.classList.contains('delete-button')) emit('delete', data);
   else if (target.classList.contains('restore-button')) emit('restore', data);
   else if (target.tagName === 'TR') {
+    // allows selecting cell content for copy/paste
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+      return;
+    }
     const path = submissionPath(props.projectId, props.xmlFormId, data.__id);
     window.open(router.resolve(path).href, '_blank', 'noopener');
   }
@@ -152,64 +157,64 @@ defineExpose({ afterReview, afterDelete });
 {
   "cs": {
     "header": {
-      "stateAndActions": "Stav a akce"
+      "state": "Stav"
     }
   },
   "de": {
     "header": {
-      "stateAndActions": "Status und Aktionen",
-      "deletedAt": "Gelöscht am"
+      "deletedAt": "Gelöscht am",
+      "state": "Status"
     }
   },
   "es": {
     "header": {
-      "stateAndActions": "Estado y acciones",
-      "deletedAt": "Suprimido el"
+      "deletedAt": "Suprimido el",
+      "state": "Estado"
     }
   },
   "fr": {
     "header": {
-      "stateAndActions": "État et actions",
-      "deletedAt": "Supprimé à"
+      "deletedAt": "Supprimé à",
+      "state": "État"
     }
   },
   "id": {
     "header": {
-      "stateAndActions": "Status dan tindakan"
+      "state": "Status"
     }
   },
   "it": {
     "header": {
-      "stateAndActions": "Stato e azioni",
-      "deletedAt": "Eliminato il"
+      "deletedAt": "Eliminato il",
+      "state": "Stato"
     }
   },
   "ja": {
     "header": {
-      "stateAndActions": "レビュー・ステータスと操作"
+      "state": "状態"
     }
   },
   "pt": {
     "header": {
-      "stateAndActions": "Status e ações",
-      "deletedAt": "Excluída em"
+      "deletedAt": "Excluída em",
+      "state": "Status"
     }
   },
   "sw": {
     "header": {
-      "stateAndActions": "Hali na vitendo"
+      "state": "hali"
     }
   },
   "zh": {
     "header": {
-      "stateAndActions": "状态与操作",
-      "deletedAt": "删除于"
+      "deletedAt": "删除于",
+      "state": "状态"
     }
   },
   "zh-Hant": {
     "header": {
-      "stateAndActions": "狀態和動作",
-      "deletedAt": "刪除於"
+      "deletedAt": "刪除於",
+      "state": "狀態"
     }
   }
 }

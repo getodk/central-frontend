@@ -219,10 +219,10 @@ export default {
       "create": "Die Entität wurde erfolgreich erstellt."
     },
     "purgeDescription": "Objekte werden nach 30 Tagen im Papierkorb gelöscht",
+    "deletedTitle": "{datasetName} (Gelöschte Entitäten)",
     "action": {
-      "toggleDeletedEntities": "{count} gelöschtes Objekt | {count} gelöschte Objekte"
-    },
-    "analyzeDisabledDeletedData": "Der OData-Zugriff ist für gelöschte Objekte nicht verfügbar"
+      "toggleDeletedEntities": "Gelöschte anzeigen"
+    }
   },
   "es": {
     "upload": "Subir entidades",
@@ -233,9 +233,8 @@ export default {
     },
     "purgeDescription": "Las Entidades se eliminan después de 30 días en la Papelera",
     "action": {
-      "toggleDeletedEntities": "{count} Entidad eliminada | {count} Entidades eliminadas | {count} Entidades eliminadas"
-    },
-    "analyzeDisabledDeletedData": "El acceso OData no está disponible para Entidades eliminadas"
+      "toggleDeletedEntities": "Mostrar elementos eliminados"
+    }
   },
   "fr": {
     "upload": "Téléverser des entités",
@@ -245,10 +244,10 @@ export default {
       "create": "Entité a été créée avec succès."
     },
     "purgeDescription": "Les entités sont supprimées après 30 jours passés dans la corbeille.",
+    "deletedTitle": "{datasetName} (entités supprimées)",
     "action": {
-      "toggleDeletedEntities": "{count} entité supprimée. | {count} Entités supprimées. | {count} Entités supprimées."
-    },
-    "analyzeDisabledDeletedData": "L'accès OData n'est pas disponible pour les entités supprimées"
+      "toggleDeletedEntities": "Montrer suprimées"
+    }
   },
   "it": {
     "upload": "Caricare Entità",
@@ -258,10 +257,10 @@ export default {
       "create": "L'Entità è stata creata con successo."
     },
     "purgeDescription": "Le Entità vengono eliminate dopo 30 giorni nel Cestino",
+    "deletedTitle": "{datasetName} (Entità eliminate)",
     "action": {
-      "toggleDeletedEntities": "{count} Entità cancellata | {count} Entità cancellate | {count} Entità cancellate"
-    },
-    "analyzeDisabledDeletedData": "L'accesso OData non è disponibile per gli Entità cancellate"
+      "toggleDeletedEntities": "Mostra entità eliminate"
+    }
   },
   "pt": {
     "upload": "Carregar Entidades",
@@ -270,34 +269,33 @@ export default {
       "upload": "Suas Entidades foram carregadas com sucesso.",
       "create": "A Entidade foi criada com sucesso."
     },
-    "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira",
-    "action": {
-      "toggleDeletedEntities": "{count} Entidade excluída | {count} Entidades excluídas | {count} Entidades excluídas"
-    },
-    "analyzeDisabledDeletedData": "O acesso OData não está disponível para Entidades excluídas"
+    "purgeDescription": "Entidades são excluídas após 30 dias na Lixeira"
   },
   "zh": {
     "upload": "上传实体",
+    "newEntity": "新实体",
     "alert": {
       "upload": "您的实体已成功上传。",
       "create": "实体已成功创建。"
     },
     "purgeDescription": "实体将在30天后从垃圾箱中删除",
+    "deletedTitle": "{datasetName}（已删除的实体）",
     "action": {
-      "toggleDeletedEntities": "{count}个已删除的实体"
-    },
-    "analyzeDisabledDeletedData": "已删除的实体无法使用 OData 访问"
+      "toggleDeletedEntities": "显示已删除的"
+    }
   },
   "zh-Hant": {
     "upload": "上傳實體",
+    "newEntity": "新實體",
     "alert": {
-      "upload": "您的實體已成功上傳。"
+      "upload": "您的實體已成功上傳。",
+      "create": "實體已成功建立。"
     },
     "purgeDescription": "實體將在 30 天後從垃圾箱中刪除",
+    "deletedTitle": "{datasetName}（已刪除的實體）",
     "action": {
-      "toggleDeletedEntities": "{count} 個已刪除的實體"
-    },
-    "analyzeDisabledDeletedData": "已刪除實體的 OData 存取不可用"
+      "toggleDeletedEntities": "顯示已刪除項目"
+    }
   }
 }
 </i18n>

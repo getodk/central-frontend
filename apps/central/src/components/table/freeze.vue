@@ -98,16 +98,16 @@ const toggleHoverClass = (event) => {
   if (hoverRowIndex.value != null) {
     if (targetRow.rowIndex - 1 === hoverRowIndex.value) return;
     frozenBody.value.rows[hoverRowIndex.value].classList.remove('hover');
-    scrollingBody.value.rows[hoverRowIndex.value].classList.remove('hover');
+    scrollingBody.value?.rows[hoverRowIndex.value].classList.remove('hover');
   }
   hoverRowIndex.value = targetRow.rowIndex - 1;
   frozenBody.value.rows[hoverRowIndex.value].classList.add('hover');
-  scrollingBody.value.rows[hoverRowIndex.value].classList.add('hover');
+  scrollingBody.value?.rows[hoverRowIndex.value].classList.add('hover');
 };
 const removeHoverClass = () => {
   if (hoverRowIndex.value != null) {
     frozenBody.value.rows[hoverRowIndex.value].classList.remove('hover');
-    scrollingBody.value.rows[hoverRowIndex.value].classList.remove('hover');
+    scrollingBody.value?.rows[hoverRowIndex.value].classList.remove('hover');
     hoverRowIndex.value = null;
   }
 };

@@ -20,7 +20,6 @@ export default {
     body: null
   },
   oidcEnabled: false,
-  showsFeedbackButton: false,
   sentryDsn: null,
   // `true` to show additional buttons to facilitate development and testing.
   devTools: false

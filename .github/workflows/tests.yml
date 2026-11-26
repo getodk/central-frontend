@@ -24,6 +24,12 @@ jobs:
       with:
         node-version-file: package.json
         cache: 'npm'
+    - name: Set npm version
+      run: |
+        NPM_VERSION=$(node -p "require('./package.json').volta.npm")
+        if [ "$(npm --version)" != "$NPM_VERSION" ]; then
+          npm install -g "npm@$NPM_VERSION"
+        fi
     - run: npm ci --no-audit
     - run: npm run build
     - run: npm run lint
@@ -115,6 +121,12 @@ jobs:
         node-version-file: central/client/package.json
         cache: 'npm'
         cache-dependency-path: 'central/client/package-lock.json'
+    - name: Set npm version
+      run: |
+        NPM_VERSION=$(node -p "require('./central/client/package.json').volta.npm")
+        if [ "$(npm --version)" != "$NPM_VERSION" ]; then
+          npm install -g "npm@$NPM_VERSION"
+        fi
     - name: Run tests
       working-directory: central
       run: client/e2e-tests/run-tests.sh --domain=central-test.localhost --port=80

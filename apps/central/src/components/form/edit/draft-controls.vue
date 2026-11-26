@@ -148,14 +148,16 @@ const abandonText = computed(() => (!form.dataExists
       "delete": "删除表单",
       "abandon": "放弃草稿",
       "publish": "发布草稿"
-    }
+    },
+    "title": "准备好发布了吗？"
   },
   "zh-Hant": {
     "action": {
       "delete": "刪除表單",
       "abandon": "放棄草案",
       "publish": "發布草稿"
-    }
+    },
+    "title": "準備好發佈了嗎？"
   }
 }
 </i18n>

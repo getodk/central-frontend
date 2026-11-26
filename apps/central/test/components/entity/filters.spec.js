@@ -410,9 +410,39 @@ describe('EntityFilters', () => {
   describe('view-as filter', () => {
     beforeEach(() => {
       testData.extendedDatasets.createPast(1, {
-        accessFilter: { type: 'ownerOnly' }
+        accessFilter: { type: 'ownerOnly' },
+        linkedForms: [{ xmlFormId: 'f', name: 'Form F' }]
       });
       testData.extendedFieldKeys.createPast(1);
+    });
+
+    it('shows the filter if the dataset has an access filter', () =>
+      load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.true;
+        }));
+
+    it('does not show the filter if the dataset has no access filter', () => {
+      testData.extendedDatasets.last().accessFilter = null;
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.false;
+        });
+    });
+
+    it('does not request options or show the filter for project viewers', () => {
+      testData.reset();
+      mockLogin({ role: 'none' });
+      testData.extendedProjects.createPast(1, { role: 'viewer', datasets: 1 });
+      testData.extendedDatasets.createPast(1, { accessFilter: { type: 'ownerOnly' } });
+      return load('/projects/1/entity-lists/trees/entities', { root: false })
+        .beforeEachResponse((_, { url }) => {
+          relativeUrl(url).pathname.should.not.equal('/v1/projects/1/app-users');
+          relativeUrl(url).pathname.should.not.equal('/v1/projects/1/assignments/forms/pub-link');
+        })
+        .afterResponses(component => {
+          component.find('#entity-filters-view-as').exists().should.be.false;
+        });
     });
 
     describe('initial request', () => {
@@ -453,6 +483,23 @@ describe('EntityFilters', () => {
         });
         const { modelValue } = component.getComponent(EntityFiltersViewAs).props();
         modelValue.should.equal(id);
+      });
+
+      it('selects the correct public link for ?viewAs=<id>', async () => {
+        // Make 2 pub links to use ID 2 so it doesn't collide with the app user's ID 1.
+        const actor = testData.extendedPublicLinks.createPast(2).last();
+        const [assignment] = testData.extendedFormSummaryAssignments.createPast(1, {
+          actor,
+          role: 'pub-link',
+          xmlFormId: 'f'
+        }).sorted();
+        const component = await load(
+          `/projects/1/entity-lists/trees/entities?viewAs=${actor.id}`,
+          { root: false },
+          { formSummaryAssignments: () => [assignment] }
+        );
+        const { modelValue } = component.getComponent(EntityFiltersViewAs).props();
+        modelValue.should.equal(actor.id);
       });
     });
 

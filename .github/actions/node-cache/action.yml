@@ -24,11 +24,19 @@ runs:
     with:
       node-version-file: package.json
 
+  - name: Set npm version
+    shell: bash
+    run: |
+      NPM_VERSION=$(node -p "require('./package.json').volta.npm")
+      if [ "$(npm --version)" != "$NPM_VERSION" ]; then
+        npm install -g "npm@$NPM_VERSION"
+      fi
+
   # Computing the key in one place keeps the save and restore steps below in sync
   - id: keys
     shell: sh
     env:
-      INSTALL_KEY: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package-lock.json', '.npmrc') }}
+      INSTALL_KEY: install-${{ steps.setup-node.outputs.node-version }}-${{ hashFiles('package.json', 'package-lock.json', '.npmrc') }}
     run: |
       echo "install=$INSTALL_KEY" >> "$GITHUB_OUTPUT"
 

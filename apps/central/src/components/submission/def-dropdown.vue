@@ -76,12 +76,14 @@ const xmlPath = computed(() =>
   },
   "de": {
     "action": {
+      "downloadXml": "XML herunterladen",
       "def": "Definition",
       "viewXml": "XML im Browser ansehen"
     }
   },
   "es": {
     "action": {
+      "downloadXml": "Descargar XML",
       "def": "Definición",
       "viewXml": "Ver el XML en el navegador"
     }
@@ -126,12 +128,14 @@ const xmlPath = computed(() =>
   },
   "zh": {
     "action": {
+      "downloadXml": "下载XML",
       "def": "定义",
       "viewXml": "在浏览器中查看XML"
     }
   },
   "zh-Hant": {
     "action": {
+      "downloadXml": "下載 XML",
       "def": "定義",
       "viewXml": "在瀏覽器中查看 XML"
     }

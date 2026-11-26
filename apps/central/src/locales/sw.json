@@ -150,8 +150,7 @@
     "hidePreview": "Ficha hakiki",
     "expand": "Panua",
     "collapse": "Punguza",
-    "upload": "pakia",
-    "reviewParallelUpdates": "Kagua masasisho sambamba"
+    "upload": "pakia"
   },
   "field": {
     "comment": "Acha Maoni",
@@ -284,6 +283,7 @@
     "propertiesCount": "{inform} ya sifa za {count} | {inform} ya sifa za {count}",
     "new": "Mpya!",
     "totalEntities": "Jumla ya Mashirika",
+    "preview": "Hakiki",
     "reviewState": "Kagua hali",
     "status": "Hali",
     "version": "Toleo",
@@ -305,11 +305,6 @@
   },
   "router": {
     "unsavedChanges": "Je, una uhakika unataka kuondoka kwenye ukurasa huu? Mabadiliko yako huenda yasihifadhiwe."
-  },
-  "formStateDescription": {
-    "open": "Fomu hii inaweza kupakuliwa na inakubali Mawasilisho.",
-    "closing": "Fomu hii haiwezi kupakuliwa lakini bado inakubali Mawasilisho.",
-    "closed": "Fomu hii haiwezi kupakuliwa na haikubali Mawasilisho."
   },
   "requestData": {
     "project": {

@@ -244,26 +244,30 @@ export default {
   "cs": {
     "action": {
       "fill": "Vyplnit formulář"
-    },
-    "formClosingTip": "Tento formulář se uzavírá a přijímá poslední podání. Není ke stažení, ale stále přijímá příspěvky."
+    }
   },
   "de": {
     "action": {
       "fill": "Formular ausfüllen"
     },
-    "formClosingTip": "Dieses Formular steht auf Schliessen und akzeptiert seine endgültigen Übermittlungen. Es kann nicht heruntergeladen werden, aber Übermittlungen werden noch akzeptiert."
+    "formClosingTip": [
+      "Dieses Formular wird geschlossen.",
+      "Neue Übermittlungen können nicht gestartet werden, aber bereits laufende Übermittlungen können weiterhin abgeschlossen werden."
+    ]
   },
   "es": {
     "action": {
       "fill": "Llenar formulario"
-    },
-    "formClosingTip": "Este formulario se está cerrando y aceptando sus Envíos finales. No se puede descargar, pero aún acepta Envíos."
+    }
   },
   "fr": {
     "action": {
       "fill": "Remplir le formulaire"
     },
-    "formClosingTip": "Ce formulaire est en cours de fermeture et accepte ses dernières soumissions. Il n'est plus téléchargeable mais peut encore recevoir des soumissions."
+    "formClosingTip": [
+      "Ce formulaire est en cours de fermeture.",
+      "Aucune nouvelle soumission ne peut être commencée, mais celles en cours peuvent encore être envoyées."
+    ]
   },
   "id": {
     "action": {
@@ -274,7 +278,10 @@ export default {
     "action": {
       "fill": "Compila il Formulario"
     },
-    "formClosingTip": "Questo Formulario è in fase di chiusura e accetta i suoi ultimi Invii. Non è scaricabile ma tuttavia accetta Invii."
+    "formClosingTip": [
+      "Questo formulario è in chiusura.",
+      "Non è possibile avviare nuove compilazioni, ma quelle già in corso possono ancora essere inviate."
+    ]
   },
   "ja": {
     "action": {
@@ -284,26 +291,30 @@ export default {
   "pt": {
     "action": {
       "fill": "Preencher formulário"
-    },
-    "formClosingTip": "Este Formulário está sendo fechado e aceitando suas respostas finais. Ele não pode ser baixado, mas ainda aceita Respostas."
+    }
   },
   "sw": {
     "action": {
       "fill": "Jaza Fomu"
-    },
-    "formClosingTip": "Fomu Hii Inafungwa na inakubali Mawasilisho yake ya mwisho. Haiwezi kupakuliwa lakini bado inakubali Mawasilisho."
+    }
   },
   "zh": {
     "action": {
       "fill": "请填写表格"
     },
-    "formClosingTip": "此表单即将关闭并接收最终提交。当前不可下载但仍可接收提交。"
+    "formClosingTip": [
+      "此表单即将关闭。",
+      "无法发起新的提交，但已在进行中的仍可继续提交。"
+    ]
   },
   "zh-Hant": {
     "action": {
       "fill": "填寫表格"
     },
-    "formClosingTip": "該表格即將結束並接受其最終提交資料。它不可下載，但仍接受提交。"
+    "formClosingTip": [
+      "此表單即將關閉。",
+      "無法開始填寫新的提交資料，但仍可提交已在填寫中的資料。"
+    ]
   }
 }
 </i18n>

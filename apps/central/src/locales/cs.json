@@ -327,6 +327,7 @@
     "warning": "Upozornění",
     "none": "(žádný)",
     "search": "Hledat",
+    "preview": "Náhled",
     "reviewState": "Přezkoumání stavu",
     "status": "Stav",
     "version": "Verze",
@@ -362,11 +363,6 @@
   },
   "router": {
     "unsavedChanges": "Opravdu chcete opustit tuto stránku? Vaše změny nemusí být uloženy."
-  },
-  "formStateDescription": {
-    "open": "Tento formulář je ke stažení a přijímá příspěvky.",
-    "closing": "Tento formulář nelze stáhnout, ale stále přijímá příspěvky.",
-    "closed": "Tento formulář nelze stáhnout a nepřijímá příspěvky."
   },
   "requestData": {
     "project": {

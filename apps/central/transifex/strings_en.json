@@ -241,15 +241,15 @@
       "entity": {
         "bulk_upsert": {
           "string": "Import Data",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_delete": {
           "string": "Bulk Delete",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         },
         "bulk_restore": {
           "string": "Bulk Restore",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
+          "developer_comment": "This is shown in the log of actions performed on the server. It is a type of action that can be taken on an Entity List."
         }
       },
       "actor_property": {
@@ -411,6 +411,10 @@
     },
     "finish": {
       "string": "Finish",
+      "developer_comment": "This is the text for an action, for example, the text of a button."
+    },
+    "import": {
+      "string": "Import",
       "developer_comment": "This is the text for an action, for example, the text of a button."
     },
     "logIn": {
@@ -1523,6 +1527,9 @@
         "num_entity_updates_api": {
           "string": "Number of Entity updates via API"
         },
+        "num_entity_updates_bulk": {
+          "string": "Number of Entity updates via bulk upload"
+        },
         "num_entities_updated": {
           "string": "Number of modified Entities"
         },
@@ -1533,7 +1540,7 @@
           "string": "Number of Entities with conflict now marked as resolved"
         },
         "num_bulk_create_events": {
-          "string": "Number of bulk uploads"
+          "string": "Number of bulk uploads (create only)"
         },
         "biggest_bulk_upload": {
           "string": "Number of rows in biggest bulk upload"
@@ -1618,6 +1625,12 @@
         },
         "num_entity_creates_bulk": {
           "string": "Number of Entities created via bulk upload"
+        },
+        "num_bulk_update_events": {
+          "string": "Number of bulk uploads (update only)"
+        },
+        "num_bulk_create_and_update_events": {
+          "string": "Number of bulk uploads (mixed create and update)"
         },
         "max_geo_per_form": {
           "string": "Maximum number of Submissions with geo data in a Form"
@@ -1907,8 +1920,8 @@
         }
       },
       "new": {
-        "string": "New",
-        "developer_comment": "This is the text of a button that is used to create a new Entity List. It is shown next to a heading whose text is \"Entity Lists\"."
+        "string": "New Entity List",
+        "developer_comment": "This is the text of a button that is used to create a new Entity List."
       }
     },
     "DatasetNew": {
@@ -1944,8 +1957,8 @@
         "developer_comment": "This is a title shown above a section of the page."
       },
       "new": {
-        "string": "New",
-        "developer_comment": "This is shown on a button for creating new Entity Properties"
+        "string": "New property",
+        "developer_comment": "This is shown on a button for creating a new Entity property."
       }
     },
     "DatasetOverviewDatasetProperties": {
@@ -2804,26 +2817,15 @@
       }
     },
     "EntityUpload": {
-      "currentEntities": {
-        "string": "Your current Entities"
-      },
-      "newEntities": {
-        "string": "New Entities"
-      },
-      "table": {
-        "file": {
-          "string": "Data to import"
-        }
-      },
-      "action": {
-        "append": {
-          "string": "Append Entities",
-          "developer_comment": "This is the text for an action, for example, the text of a button."
-        }
+      "title": {
+        "string": "Import data from file"
       },
       "alert": {
         "invalidUUID": {
           "string": "Invalid UUID “{value}”."
+        },
+        "duplicateUUID": {
+          "string": "The Entity ID {uuid} appears more than once in the file. Each update row must have a unique ID."
         },
         "blankLabel": {
           "string": "Missing label."
@@ -2897,6 +2899,15 @@
         "description": {
           "string": "Please remove any empty columns in your file."
         }
+      },
+      "unknownEntities": {
+        "title": {
+          "string": "Some rows contain Entity IDs that were not found in the Entity List:",
+          "developer_comment": "This text is followed by a list of one or more rows."
+        },
+        "description": {
+          "string": "These Entities cannot be updated. To proceed, either remove these Entities from the file, or ensure that they exist in the Entity List."
+        }
       }
     },
     "EntityUploadExtraProperties": {
@@ -2917,8 +2928,11 @@
       "upload": {
         "string": "Upload a .csv file"
       },
+      "replace": {
+        "string": "Replace data with new file"
+      },
       "errors": {
-        "string": "{count, plural, one {{count} error must be fixed before appending Entities} other {{count} errors must be fixed before appending Entities}}"
+        "string": "{count, plural, one {{count} error must be fixed before importing data} other {{count} errors must be fixed before importing data}}"
       },
       "text": {
         "full": {
@@ -2958,6 +2972,28 @@
         }
       }
     },
+    "EntityUploadRowCounts": {
+      "created": {
+        "full": {
+          "string": "{count, plural, one {{rows} will be created.} other {{rows} will be created.}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {{count} row} other {{count} rows}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be created."
+        }
+      },
+      "updated": {
+        "full": {
+          "string": "{count, plural, one {{rows} will be updated.} other {{rows} will be updated.}}",
+          "developer_comment": "{rows} is a separate string that will be translated below. Its text will be formatted within ODK Central, for example, it might be bold or a link. In its plural form, its text is:\n\n{count} rows"
+        },
+        "rows": {
+          "string": "{count, plural, one {{count} row} other {{count} rows}}",
+          "developer_comment": "This text will be formatted within ODK Central, for example, it might be bold or a link. It will be inserted where {rows} is in the following text. (The plural form of the text is shown.)\n\n{rows} will be updated."
+        }
+      }
+    },
     "EntityUploadWarnings": {
       "introduction": {
         "string": "Some rows contain warnings that may affect upload results."
@@ -2989,7 +3025,7 @@
           "developer_comment": "\"Property\" refers to an Entity property."
         },
         "description": {
-          "string": "{count, plural, one {This property will be left empty.} other {These properties will be left empty.}}",
+          "string": "{count, plural, one {This property will be left empty for new Entities and unchanged for updated ones.} other {These properties will be left empty for new Entities and unchanged for updated ones.}}",
           "developer_comment": "\"Property\" refers to an Entity property."
         }
       },
@@ -3076,12 +3112,6 @@
           "string": "If you don’t want to maintain Central, try {OdkCloudLink}.",
           "developer_comment": "{OdkCloudLink} is a hyperlink to the ODK Cloud webpage and the text of it is \"ODK Cloud\", which doesn't need to be translated."
         }
-      }
-    },
-    "FeedbackButton": {
-      "feedback": {
-        "string": "Feedback",
-        "developer_comment": "Text for a hovering feedback button shown anchored to right of screen. If your language doesn't have a single word or short phrase for \"feedback\", consider something like \"comments\" or \"reactions\"."
       }
     },
     "FieldKeyEdit": {
@@ -3872,12 +3902,6 @@
       "emptyTable": {
         "string": "There are no Forms to show."
       },
-      "action": {
-        "create": {
-          "string": "New",
-          "developer_comment": "This is the text of a button that is used to create a new Form."
-        }
-      },
       "alert": {
         "create": {
           "string": "“{name}” has been created as a Form Draft."
@@ -4313,7 +4337,7 @@
       },
       "preview": {
         "string": "Preview",
-        "developer_comment": "This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)"
+        "developer_comment": "This is text shown as a label above a preview of something."
       }
     },
     "Multiselect": {
@@ -4703,7 +4727,7 @@
       },
       "action": {
         "create": {
-          "string": "New",
+          "string": "New Project",
           "developer_comment": "This is the text of a button that is used to create a new Project."
         }
       },
@@ -5828,15 +5852,15 @@
     },
     "WhatsNew": {
       "title": {
-        "string": "Easier Entity Uploads 📤",
+        "string": "A refreshed ODK Central",
         "developer_comment": "This is the title at the top of a pop-up."
       },
       "body": {
         "0": {
-          "string": "Bring your Entities into ODK faster with a smoother CSV upload experience. Get clearer errors and warnings, fix issues, and try again, all in one place."
+          "string": "ODK Central has a refreshed look with updated navigation, clearer table styling, and a new accessible primary blue."
         },
         "1": {
-          "string": "You can now also create new properties directly from your CSV."
+          "string": "You can also now update multiple Entities at once using CSV bulk updates, preview Entity access as a Public Link, and quickly copy and open Public Link URLs in a new window."
         }
       }
     }

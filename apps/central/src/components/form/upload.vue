@@ -754,6 +754,9 @@ export default {
     "action": {
       "uploadAnyway": "無論如何上傳"
     },
+    "alert": {
+      "fileNotReadable": "無法讀取檔案。檔案可能已被修改或刪除。請重新選擇檔案。"
+    },
     "problem": {
       "400_8": "您上傳的表單定義似乎不適用於此表單。它的 formId (表單 ID)錯誤（預期為“{expected}”，得到“{actual}”）。",
       "400_15": "無法轉換 XLSForm：{error}",

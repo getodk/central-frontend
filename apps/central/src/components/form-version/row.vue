@@ -116,10 +116,12 @@ defineEmits(['view-xml']);
     "current": "Versão publicada atualmente"
   },
   "zh": {
-    "current": "当前已发布版本"
+    "current": "当前已发布版本",
+    "notes": "备注：{notes}"
   },
   "zh-Hant": {
-    "current": "當前已發布版本"
+    "current": "當前已發布版本",
+    "notes": "備註：{notes}"
   }
 }
 </i18n>

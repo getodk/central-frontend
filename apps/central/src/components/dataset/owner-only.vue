@@ -353,12 +353,29 @@ const confirm = () => {
 <i18n>
 {
   "de": {
+    "panel": {
+      "title": "Zugriff auf die Objektliste"
+    },
     "accessAll": "Zugriff auf alle Objekte",
     "accessAllDefault": "Zugriff auf alle Objekte (Standard)",
     "ownerOnly": "Nur auf eigene Objekte zugreifen",
     "radio": {
       "false": "App-Benutzer und Datenerfasser innerhalb dieses Projekts haben Zugriff auf alle Objekte innerhalb der ihnen zugewiesenen Formulare.",
       "true": "App-Benutzer und Datensammler innerhalb dieses Projekts haben nur Zugriff auf die Objekte, die sie selbst erstellen. Dies fördert den Datenschutz und begrenzt die Datenübertragungen."
+    },
+    "filterByProperty": {
+      "label": "Nach Eigenschaft filtern",
+      "description": "Legen Sie fest, welche Objekte App-Benutzer und öffentliche Zugangslinks sehen, indem Sie Objekt- und Benutzereigenschaften vergleichen.",
+      "entityPropertyLabel": "Nur Objekte anzeigen, deren",
+      "entityPropertyPlaceholder": "Objekteigenschaft",
+      "userPropertyLabel": "übereinstimmt mit der Eigenschaft des Benutzers",
+      "userPropertyPlaceholder": "Benutzereigenschaft",
+      "disabled": {
+        "datasetProperties": "Es sind keine Objekteigenschaften definiert.",
+        "userProperties": "Es sind keine Benutzereigenschaften definiert.",
+        "both": "Es sind weder Objekt- noch Benutzereigenschaften definiert."
+      },
+      "currentRule": "Regel: {entityProperty} (Objekteigenschaft) = {userProperty} (Benutzereigenschaft)"
     },
     "falseModal": {
       "introduction": "App-Benutzer und Datensammler haben Zugriff auf alle Objekte, einschließlich derjenigen, die sie nicht selbst erstellt haben."
@@ -371,7 +388,15 @@ const confirm = () => {
     },
     "alert": {
       "changeToFalse": "App-Nutzer und Datensammler haben nun Zugang zu allen Objekte.",
-      "changeToTrue": "App-Benutzer und Datensammler haben nun nur noch Zugriff auf die Objekte, die sie selbst erstellen."
+      "changeToTrue": "App-Benutzer und Datensammler haben nun nur noch Zugriff auf die Objekte, die sie selbst erstellen.",
+      "changeToProperty": "App-Benutzer und öffentliche Zugangslinks haben jetzt nur noch Zugriff auf Objekte, die zur Filterregel passen."
+    },
+    "accessByFilterRule": {
+      "title": "Nach Eigenschaft filtern",
+      "introduction": "App-Benutzer und öffentliche Zugangslinks haben nur Zugriff auf Objekte, bei denen die gewählte Eigenschaft mit ihrer Benutzereigenschaft übereinstimmt.",
+      "action": {
+        "save": "Filterregel speichern"
+      }
     }
   },
   "es": {
@@ -390,7 +415,13 @@ const confirm = () => {
       "description": "Define las reglas que determinan qué entidades son visibles para los usuarios de la aplicación y en los enlaces públicos, comparando sus propiedades.",
       "entityPropertyLabel": "Mostrar solo las entidades en las que",
       "entityPropertyPlaceholder": "Propiedad de la entidad",
-      "userPropertyPlaceholder": "Propiedad de usuario"
+      "userPropertyLabel": "es igual al del usuario",
+      "userPropertyPlaceholder": "Propiedad de usuario",
+      "disabled": {
+        "datasetProperties": "No hay ninguna propiedad de entidad definida.",
+        "userProperties": "No hay propiedades personalizadas definidas.",
+        "both": "No hay ninguna propiedad de entidad ni de usuario definida."
+      }
     },
     "falseModal": {
       "introduction": "Los usuarios de la aplicación y los recopiladores de datos tendrán acceso a todas las entidades, incluidas las que no hayan creado."
@@ -404,6 +435,13 @@ const confirm = () => {
     "alert": {
       "changeToFalse": "Los usuarios de la aplicación y los recopiladores de datos tendrán ahora acceso a todas las entidades.",
       "changeToTrue": "Los usuarios de la aplicación y los recopiladores de datos ahora sólo tendrán acceso a las entidades que creen."
+    },
+    "accessByFilterRule": {
+      "title": "Filtrar por propiedad",
+      "introduction": "Los usuarios de la aplicación y los enlaces públicos solo tendrán acceso a las entidades en las que la propiedad seleccionada coincida con su propiedad de usuario.",
+      "action": {
+        "save": "Guardar regla de filtro"
+      }
     }
   },
   "fr": {
@@ -454,6 +492,9 @@ const confirm = () => {
     }
   },
   "it": {
+    "panel": {
+      "title": "Accesso alla Lista Entità"
+    },
     "accessAll": "Accedi a tutte le entità",
     "accessAllDefault": "Accedi a tutte le entità (predefinito)",
     "ownerOnly": "Accedere solo alle proprie entità",
@@ -462,8 +503,18 @@ const confirm = () => {
       "true": "Gli utenti dell'app e i raccoglitori di dati nell'ambito di questo progetto avranno accesso solo alle entità da loro create, promuovendo la privacy e limitando i trasferimenti di dati."
     },
     "filterByProperty": {
+      "label": "Filtra per proprietà",
+      "description": "Definisci quali entità sono visibili agli utenti dell'app e ai link pubblici confrontandone le proprietà.",
+      "entityPropertyLabel": "Mostra solo le entità in cui",
       "entityPropertyPlaceholder": "Proprietà della Entità",
-      "userPropertyPlaceholder": "Proprietà utente"
+      "userPropertyLabel": "è uguale alla proprietà utente",
+      "userPropertyPlaceholder": "Proprietà utente",
+      "disabled": {
+        "datasetProperties": "Non è definita nessuna proprietà delle entità.",
+        "userProperties": "Non è definita nessuna proprietà personalizzata.",
+        "both": "Non è definita nessuna proprietà delle entità o degli utenti."
+      },
+      "currentRule": "Regola: {entityProperty} (proprietà dell'entità) = {userProperty} (proprietà utente)"
     },
     "falseModal": {
       "introduction": "Gli utenti dell'app e i raccoglitori di dati avranno accesso a tutte le entità, comprese quelle che non hanno creato."
@@ -476,7 +527,15 @@ const confirm = () => {
     },
     "alert": {
       "changeToFalse": "Gli utenti dell'app e i raccoglitori di dati avranno ora accesso a tutte le entità.",
-      "changeToTrue": "Gli utenti delle app e i raccoglitori di dati avranno ora accesso solo alle entità da loro create."
+      "changeToTrue": "Gli utenti delle app e i raccoglitori di dati avranno ora accesso solo alle entità da loro create.",
+      "changeToProperty": "Gli utenti dell'app e i link pubblici avranno ora accesso solo alle entità che corrispondono alla regola di filtro."
+    },
+    "accessByFilterRule": {
+      "title": "Filtra per proprietà",
+      "introduction": "Gli utenti dell'app e i link pubblici avranno accesso solo alle entità in cui la proprietà selezionata corrisponde alla loro proprietà utente.",
+      "action": {
+        "save": "Salva regola di filtro"
+      }
     }
   },
   "pt": {
@@ -490,12 +549,29 @@ const confirm = () => {
     }
   },
   "zh": {
+    "panel": {
+      "title": "实体列表访问权限"
+    },
     "accessAll": "访问所有实体",
     "accessAllDefault": "访问所有实体（默认）",
     "ownerOnly": "仅访问自己的实体",
     "radio": {
       "false": "本项目内的App用户和数据收集员将可通过其被分配的表单访问所有相关实体。",
       "true": "本项目中的应用用户和数据收集员只能访问他们自己创建的实体，以促进隐私保护并限制数据传输。"
+    },
+    "filterByProperty": {
+      "label": "按属性筛选",
+      "description": "通过比较属性，定义哪些实体对应用用户和公开链接可见的规则。",
+      "entityPropertyLabel": "仅查看满足以下条件的实体",
+      "entityPropertyPlaceholder": "实体属性",
+      "userPropertyLabel": "等于用户的",
+      "userPropertyPlaceholder": "用户属性",
+      "disabled": {
+        "datasetProperties": "未定义任何实体属性。",
+        "userProperties": "未定义任何自定义属性。",
+        "both": "未定义任何实体属性或用户属性。"
+      },
+      "currentRule": "规则：{entityProperty}（实体属性）= {userProperty}（用户属性）"
     },
     "falseModal": {
       "introduction": "App用户和数据收集者拥有访问实体的权限，包括他们未建立的实体。"
@@ -508,16 +584,41 @@ const confirm = () => {
     },
     "alert": {
       "changeToFalse": "App使用者和数据收集者现在可以访问所有的实体。",
-      "changeToTrue": "App使用者和数据收集者现在只能访问他们创建的实体。"
+      "changeToTrue": "App使用者和数据收集者现在只能访问他们创建的实体。",
+      "changeToProperty": "应用用户和公开链接现在只能访问符合筛选规则的实体。"
+    },
+    "accessByFilterRule": {
+      "title": "按属性筛选",
+      "introduction": "应用用户和公开链接只能访问所选属性与其用户属性匹配的实体。",
+      "action": {
+        "save": "保存筛选规则"
+      }
     }
   },
   "zh-Hant": {
+    "panel": {
+      "title": "實體清單存取權限"
+    },
     "accessAll": "存取所有實體",
     "accessAllDefault": "存取所有實體 (預設)",
     "ownerOnly": "僅存取自己的實體",
     "radio": {
       "false": "此專案中的 App 使用者和資料收集者將可存取其指定表單中的所有實體。",
       "true": "此專案中的 App 使用者和資料收集者僅能存取他們所建立的實體，以促進隱私權並限製資料傳輸。"
+    },
+    "filterByProperty": {
+      "label": "依屬性篩選",
+      "description": "透過比較屬性，定義應用程式使用者和公開連結可看到哪些實體的規則。",
+      "entityPropertyLabel": "僅可看到符合以下條件的實體：",
+      "entityPropertyPlaceholder": "實體屬性",
+      "userPropertyLabel": "等於使用者的",
+      "userPropertyPlaceholder": "使用者屬性",
+      "disabled": {
+        "datasetProperties": "尚未定義任何實體屬性。",
+        "userProperties": "尚未定義任何自訂屬性。",
+        "both": "尚未定義任何實體屬性或使用者屬性。"
+      },
+      "currentRule": "規則：{entityProperty}（實體屬性）= {userProperty}（使用者屬性）"
     },
     "falseModal": {
       "introduction": "App 使用者和資料收集者將可存取所有實體，包括他們未建立的實體。"
@@ -530,7 +631,15 @@ const confirm = () => {
     },
     "alert": {
       "changeToFalse": "App 使用者和資料收集者現在可以存取所有實體。",
-      "changeToTrue": "App 使用者和資料收集者現在只能存取他們所建立的實體。"
+      "changeToTrue": "App 使用者和資料收集者現在只能存取他們所建立的實體。",
+      "changeToProperty": "應用程式使用者和公開連結現在僅能存取符合篩選規則的實體。"
+    },
+    "accessByFilterRule": {
+      "title": "依屬性篩選",
+      "introduction": "應用程式使用者和公開連結僅能存取所選屬性與其使用者屬性相符的實體。",
+      "action": {
+        "save": "儲存篩選規則"
+      }
     }
   }
 }

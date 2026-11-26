@@ -1,13 +1,14 @@
 import Papa from 'papaparse';
-import { DateTime } from 'luxon';
 import { T, pick } from 'ramda';
 import { faker } from '@faker-js/faker';
 
 import EntityFilters from '../../../src/components/entity/filters.vue';
 import EntityUpload from '../../../src/components/entity/upload.vue';
+import EntityUploadAlert from '../../../src/components/entity/upload/alert.vue';
 import EntityUploadErrors from '../../../src/components/entity/upload/errors.vue';
 import EntityUploadExtraProperties from '../../../src/components/entity/upload/extra-properties.vue';
 import EntityUploadFileSelect from '../../../src/components/entity/upload/file-select.vue';
+import EntityUploadRowCounts from '../../../src/components/entity/upload/row-counts.vue';
 import EntityUploadPopup from '../../../src/components/entity/upload/popup.vue';
 import EntityUploadTable from '../../../src/components/entity/upload/table.vue';
 import EntityUploadWarnings from '../../../src/components/entity/upload/warnings.vue';
@@ -29,18 +30,9 @@ const showModal = () => {
         requestData: { dataset }
       }
     })
-    .request(modal => modal.setProps({ state: true }))
-    .modify(series => (dataset.entities !== 0
-      ? series.respondWithData(() => testData.entityOData(5, 0, true))
-      : series));
+    .afterResponses(modal => modal.setProps({ state: true }));
 };
-const parseFilterTime = (filter) => {
-  const match = filter.match(/^__system\/createdAt le (.+)/);
-  return match == null
-    ? NaN
-    : DateTime.fromISO(match[1]).toMillis();
-};
-const uuid = () => faker.string.uuid();
+const uuid = () => testData.extendedEntities.createPast(1).last().uuid;
 const createCSV = (data = 'label\ndogwood') => {
   const text = typeof data === 'string' ? data : Papa.unparse(data);
   return new File([text], 'my_data.csv');
@@ -49,11 +41,17 @@ const selectFile = async (modal, file = createCSV()) => {
   await setFiles(modal.get('input[type="file"]'), [file]);
   return waitUntil(() => !modal.vm.parsing);
 };
-const getTables = (modal) => {
-  const tables = modal.findAllComponents(EntityUploadTable);
-  tables.length.should.equal(2);
-  return tables;
-};
+const respondWithEntities = (series) => series.respondIf(
+  ({ url }) => url.includes('.svc'),
+  ({ url }) => {
+    const filter = relativeUrl(url).searchParams.get('$filter');
+    const uuids = new Set([...(filter.matchAll(/'([^']+)'/g))]
+      .map(match => match[1]));
+    return {
+      value: testData.entityOData().value.filter(({ __id }) => uuids.has(__id))
+    };
+  }
+);
 const toggleExtra = (component, name, checked = true) => {
   const input = component.get(`#entity-upload-extra-properties input[value="${name}"]`);
   input.element.checked.should.equal(!checked);
@@ -82,52 +80,6 @@ describe('EntityUpload', () => {
     });
     const button = component.find('#dataset-entities-upload-button');
     button.exists().should.be.false;
-  });
-
-  describe('request for server data', () => {
-    it('sends the correct request', () => {
-      testData.extendedDatasets.createPast(1, { name: 'á', entities: 1 });
-      testData.extendedEntities.createPast(1);
-      return showModal().testRequests([{
-        url: ({ pathname, searchParams: params }) => {
-          pathname.should.equal('/v1/projects/1/datasets/%C3%A1.svc/Entities');
-          const millis = parseFilterTime(params.get('$filter'));
-          (Date.now() - millis).should.be.below(2000);
-          params.get('$top').should.equal('5');
-          params.get('$skip').should.equal('0');
-          params.get('$count').should.equal('true');
-        }
-      }]);
-    });
-
-    it('does not send a request if there are no entities', () => {
-      testData.extendedDatasets.createPast(1);
-      return showModal().testNoRequest();
-    });
-
-    it('sends a new request if the modal is hidden, then shown again', () => {
-      testData.extendedEntities.createPast(1);
-      let firstTime;
-      return showModal()
-        .beforeEachResponse((_, { url }) => {
-          const params = relativeUrl(url).searchParams;
-          firstTime = parseFilterTime(params.get('$filter'));
-        })
-        .complete()
-        .request(async (modal) => {
-          await modal.setProps({ state: false });
-          await modal.setProps({ state: true });
-        })
-        .respondWithData(() => testData.entityOData(5, 0, true))
-        .testRequests([{
-          url: ({ pathname, searchParams: params }) => {
-            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
-            const millis = parseFilterTime(params.get('$filter'));
-            millis.should.be.above(firstTime);
-            (Date.now() - millis).should.be.below(2000);
-          }
-        }]);
-    });
   });
 
   describe('after a file is selected', () => {
@@ -167,10 +119,14 @@ describe('EntityUpload', () => {
         errors.missingLabel.should.be.true;
       });
 
-      it('does not show an error if there is an __id column', async () => {
-        const modal = await showModal();
-        await selectFile(modal, createCSV(`__id,height\n${uuid()},1`));
-        modal.findComponent(EntityUploadErrors).exists().should.be.false;
+      it('does not show an error if there is an __id column', () => {
+        const csv = createCSV(`__id,height\n${uuid()},1`);
+        return showModal()
+          .request(modal => selectFile(modal, csv))
+          .modify(respondWithEntities)
+          .afterResponse(modal => {
+            modal.findComponent(EntityUploadErrors).exists().should.be.false;
+          });
       });
     });
 
@@ -210,7 +166,7 @@ describe('EntityUpload', () => {
         // Label is only whitespace
         'label,height\n" ",1',
         // Entity update
-        `__id,label,height\n${uuid()},,1`
+        `__id,label,height\n${faker.string.uuid()},,1`
       ].forEach(data => {
         it(`shows an error for ${JSON.stringify(data)}`, async () => {
           const modal = await showModal();
@@ -228,6 +184,20 @@ describe('EntityUpload', () => {
       await selectFile(modal, createCSV('__id,label\nfoo,bar'));
       const errors = modal.getComponent(EntityUploadErrors).props();
       errors.dataError.should.equal('There is a problem on row 2 of the file: Invalid UUID “foo”.');
+      errors.count.should.equal(1);
+    });
+
+    it('shows an error for a duplicate UUID', async () => {
+      const id = uuid();
+      const modal = await showModal();
+      await selectFile(modal, createCSV([
+        ['__id', 'label'],
+        [id, 'dogwood'],
+        ['', 'elm'],
+        [id, 'pine']
+      ]));
+      const errors = modal.getComponent(EntityUploadErrors).props();
+      errors.dataError.should.startWith(`There is a problem on row 4 of the file: The Entity ID ${id} appears more than once`);
       errors.count.should.equal(1);
     });
   });
@@ -302,19 +272,17 @@ describe('EntityUpload', () => {
     });
 
     it('does not show data warnings if there is a data error', async () => {
-      testData.extendedDatasets.createPast(1, {
-        properties: [{ name: 'height' }, { name: 'circumference' }]
-      });
+      testData.extendedDatasets.createPast(1);
       const modal = await showModal();
 
       // First, select a CSV that triggers warnings about both the column header
       // and the data, but does not trigger errors.
-      const warningsCSV = 'label,height\nx\ny,""';
+      const warningsCSV = 'label,circumference\nx\ny,""';
       await selectFile(modal, createCSV(warningsCSV));
       modal.findComponent(EntityUploadErrors).exists().should.be.false;
       const initialWarnings = modal.getComponent(EntityUploadWarnings).props();
       initialWarnings.count.should.equal(2);
-      initialWarnings.missingProperties.should.eql(['circumference']);
+      initialWarnings.extraProperties.should.eql(['circumference']);
       initialWarnings.raggedRows.should.eql([[1, 1]]);
 
       // Next, select a similar CSV that also has an error in the data (a
@@ -329,7 +297,7 @@ describe('EntityUpload', () => {
       // data.
       const warnings = modal.getComponent(EntityUploadWarnings).props();
       warnings.count.should.equal(1);
-      warnings.missingProperties.should.eql(['circumference']);
+      warnings.extraProperties.should.eql(['circumference']);
       should.not.exist(warnings.raggedRows);
     });
 
@@ -352,7 +320,7 @@ describe('EntityUpload', () => {
       ]));
       const warnings = modal.getComponent(EntityUploadWarnings);
       warnings.props().raggedRows.should.eql([[9, 11]]);
-      const table = getTables(modal)[1];
+      const table = modal.getComponent(EntityUploadTable);
       table.props().rowIndex.should.equal(0);
       should.not.exist(table.props().highlighted);
       const a = modal.get('.entity-upload-alert a');
@@ -369,16 +337,17 @@ describe('EntityUpload', () => {
       const a = modal.get('.entity-upload-alert a');
       a.text().should.equal('1–2');
       await a.trigger('click');
-      getTables(modal)[1].props().highlighted.should.eql([0, 1]);
+      const table = modal.getComponent(EntityUploadTable);
+      table.props().highlighted.should.eql([0, 1]);
       await selectFile(modal, createCSV(csvString));
-      should.not.exist(getTables(modal)[1].props().highlighted);
+      should.not.exist(table.props().highlighted);
     });
   });
 
   it('renders correctly as the user moves through the flow', async () => {
     testData.extendedDatasets.createPast(1);
     const modal = await showModal();
-    const table = getTables(modal)[1];
+    const table = modal.getComponent(EntityUploadTable);
     const fileSelect = modal.getComponent(EntityUploadFileSelect);
     const getState = () => {
       let tableVisible = true;
@@ -433,19 +402,17 @@ describe('EntityUpload', () => {
   });
 
   it('resets errors and warnings after a new file is selected', async () => {
-    testData.extendedDatasets.createPast(1, {
-      properties: [{ name: 'height' }]
-    });
+    testData.extendedDatasets.createPast(1);
     const modal = await showModal();
     const button = modal.get('.modal-actions .btn-primary');
 
-    const problemCSV = createCSV('label,label\ndogwood,dogwood');
+    const problemCSV = createCSV('label,label,height\ndogwood,dogwood,1');
     await selectFile(modal, problemCSV);
     modal.findComponent(EntityUploadErrors).exists().should.be.true;
     modal.findComponent(EntityUploadWarnings).exists().should.be.true;
     button.attributes('aria-disabled').should.equal('true');
 
-    await selectFile(modal, createCSV('label,height\ndogwood,1'));
+    await selectFile(modal, createCSV('label\ndogwood'));
     modal.findComponent(EntityUploadErrors).exists().should.be.false;
     modal.findComponent(EntityUploadWarnings).exists().should.be.false;
     button.attributes('aria-disabled').should.equal('false');
@@ -475,7 +442,6 @@ describe('EntityUpload', () => {
   it('sends the correct upload request', () => {
     testData.extendedDatasets.createPast(1, { name: 'á' });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal);
         return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -623,7 +589,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }, { name: 'circumference' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, createCSV('label,height\ndogwood,1'));
 
@@ -649,7 +614,6 @@ describe('EntityUpload', () => {
     // One __id is completely empty, while the other is only whitespace.
     const csv = createCSV('__id,label\n,dogwood\n" ",elm');
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, csv);
 
@@ -675,7 +639,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -710,7 +673,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -744,7 +706,6 @@ describe('EntityUpload', () => {
       properties: [{ name: 'height' }, { name: 'circumference' }, { name: 'species' }]
     });
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(
           modal,
@@ -812,7 +773,7 @@ describe('EntityUpload', () => {
       const modal = await showModal();
       await selectFile(modal, extraCSV);
 
-      const table = getTables(modal)[1];
+      const table = modal.getComponent(EntityUploadTable);
       should.not.exist(table.props().extraProperties);
 
       const input = modal.get('#entity-upload-extra-properties .checkbox:nth-child(2) input');
@@ -834,7 +795,7 @@ describe('EntityUpload', () => {
         return checked.map(div => div.text());
       };
       const getTableExtra = () =>
-        getTables(modal)[1].props().extraProperties ?? [];
+        modal.getComponent(EntityUploadTable).props().extraProperties ?? [];
 
       await selectFile(modal, extraCSV);
       await toggleExtra(modal, 'circumference');
@@ -909,7 +870,6 @@ describe('EntityUpload', () => {
 
     it('sends all extra properties if all were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -949,7 +909,6 @@ describe('EntityUpload', () => {
 
     it('does not send all extra properties if only some were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -982,7 +941,6 @@ describe('EntityUpload', () => {
 
     it('does not send extra properties if none were selected', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -1006,7 +964,6 @@ describe('EntityUpload', () => {
 
     it('does not create properties that were selected, but are not in current CSV', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, createCSV('label,foo\ndogwood,x'));
           await toggleExtra(modal, 'foo');
@@ -1032,7 +989,6 @@ describe('EntityUpload', () => {
 
     it('shows a popup during the request', () =>
       showModal()
-        .complete()
         .request(async (modal) => {
           await selectFile(modal, extraCSV);
           await toggleExtra(modal, 'circumference');
@@ -1097,12 +1053,6 @@ describe('EntityUpload', () => {
           .respondWithProblem() // Upload
           .afterResponses(app => {
             getCreated(app).should.eql(['circumference']);
-
-            // Even though the entity list has a new property, that shouldn't be
-            // fully reflected in the modal yet. We want the modal to stay as
-            // similar/stable as possible over the course of this error case.
-            const th = getTables(app)[0].findAll('th').map(wrapper => wrapper.text());
-            th.should.eql(['Row', 'label', 'height']);
           })
           // Try to upload again. This time, it should only send the upload
           // request.
@@ -1219,7 +1169,6 @@ describe('EntityUpload', () => {
       ['elm', ' x  y ', ' ']
     ]);
     return showModal()
-      .complete()
       .request(async (modal) => {
         await selectFile(modal, csv);
         await toggleExtra(modal, 'circumference');
@@ -1286,6 +1235,58 @@ describe('EntityUpload', () => {
   });
 
   describe('entity updates', () => {
+    it('requests current entities', () => {
+      const uuids = [uuid(), uuid(), uuid()];
+      const newEntity = ['', 'New Entity'];
+      const csv = createCSV([
+        ['__id', 'label'],
+        // Page 1
+        ...new Array(3).fill(newEntity),
+        [uuids[0], 'Updated Entity'],
+        [uuids[1], 'Updated Entity'],
+        // Page 2
+        ...new Array(5).fill(newEntity),
+        // Page 3
+        [uuids[2], 'Updated Entity']
+      ]);
+      return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
+        .testRequests([{
+          url: ({ pathname, searchParams: params }) => {
+            pathname.should.equal('/v1/projects/1/datasets/trees.svc/Entities');
+            params.get('$filter').should.equal(`__id eq '${uuids[0]}' or __id eq '${uuids[1]}'`);
+          }
+        }])
+        .afterResponses(modal => {
+          const { serverEntities } = modal.vm.$container.requestData.localResources;
+          serverEntities.dataExists.should.be.true;
+          serverEntities.size.should.equal(2);
+          serverEntities.has(uuids[0]).should.be.true;
+          serverEntities.has(uuids[1]).should.be.true;
+        })
+        .testNoRequest(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .afterResponses(modal => {
+          const { serverEntities } = modal.vm.$container.requestData.localResources;
+          serverEntities.dataExists.should.be.false;
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .testRequests([{
+          url: ({ searchParams: params }) => {
+            params.get('$filter').should.equal(`__id eq '${uuids[2]}'`);
+          }
+        }])
+        .afterResponses(modal => {
+          const { serverEntities } = modal.vm.$container.requestData.localResources;
+          serverEntities.dataExists.should.be.true;
+          serverEntities.size.should.equal(1);
+          serverEntities.has(uuids[2]).should.be.true;
+        });
+    });
+
     it('sends updates', () => {
       testData.extendedDatasets.createPast(1, {
         properties: [{ name: 'height' }]
@@ -1297,11 +1298,11 @@ describe('EntityUpload', () => {
         [uuids[1], 'elm', '2']
       ]);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
-        .request(async (modal) => {
-          await selectFile(modal, csv);
-          return modal.get('.modal-actions .btn-primary').trigger('click');
-        })
+        .request(modal =>
+          modal.get('.modal-actions .btn-primary').trigger('click'))
         .respondWithProblem()
         .testRequests([{
           method: 'POST',
@@ -1329,11 +1330,11 @@ describe('EntityUpload', () => {
         [uuids[1], 'oak', '4']
       ]);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
-        .request(async (modal) => {
-          await selectFile(modal, csv);
-          return modal.get('.modal-actions .btn-primary').trigger('click');
-        })
+        .request(modal =>
+          modal.get('.modal-actions .btn-primary').trigger('click'))
         .respondWithProblem()
         .testRequests([{
           method: 'POST',
@@ -1354,13 +1355,16 @@ describe('EntityUpload', () => {
 
     it('accepts uppercase UUIDs', () => {
       testData.extendedDatasets.createPast(1);
+      testData.extendedEntities.createPast(1, {
+        uuid: '12345678-1234-4123-8234-123456789abc'
+      });
       const csv = createCSV('__id,label\n12345678-1234-4123-8234-123456789ABC,dogwood');
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
-        .request(async (modal) => {
-          await selectFile(modal, csv);
-          return modal.get('.modal-actions .btn-primary').trigger('click');
-        })
+        .request(modal =>
+          modal.get('.modal-actions .btn-primary').trigger('click'))
         .respondWithProblem()
         .testRequests([{
           method: 'POST',
@@ -1385,11 +1389,11 @@ describe('EntityUpload', () => {
         [uuids[1], '2']
       ]);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
-        .request(async (modal) => {
-          await selectFile(modal, csv);
-          return modal.get('.modal-actions .btn-primary').trigger('click');
-        })
+        .request(modal =>
+          modal.get('.modal-actions .btn-primary').trigger('click'))
         .respondWithProblem()
         .testRequests([{
           method: 'POST',
@@ -1411,11 +1415,11 @@ describe('EntityUpload', () => {
       const id = uuid();
       const csv = createCSV(`__id,height\n${id},1`);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
-        .request(async (modal) => {
-          await selectFile(modal, csv);
-          return modal.get('.modal-actions .btn-primary').trigger('click');
-        })
+        .request(modal =>
+          modal.get('.modal-actions .btn-primary').trigger('click'))
         .respondWithProblem()
         .testRequests([{
           method: 'POST',
@@ -1438,9 +1442,10 @@ describe('EntityUpload', () => {
         [uuids[1], '4', 'elm', '5', '6']
       ]);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
         .request(async (modal) => {
-          await selectFile(modal, csv);
           await toggleExtra(modal, 'species');
           await toggleExtra(modal, 'circumference');
           return modal.get('.modal-actions .btn-primary').trigger('click');
@@ -1490,9 +1495,10 @@ describe('EntityUpload', () => {
         [id, 'elm', '', '']
       ]);
       return showModal()
+        .request(modal => selectFile(modal, csv))
+        .modify(respondWithEntities)
         .complete()
         .request(async (modal) => {
-          await selectFile(modal, csv);
           await toggleExtra(modal, 'circumference');
           return modal.get('.modal-actions .btn-primary').trigger('click');
         })
@@ -1519,5 +1525,165 @@ describe('EntityUpload', () => {
           }
         ]);
     });
+
+    it('only shows warning about missing properties if file contains a new entity, not exclusively updates', () => {
+      testData.extendedDatasets.createPast(1, {
+        properties: [{ name: 'height' }]
+      });
+      const id = uuid();
+      // Returns `true` if the modal shows the missingProperties warning and
+      // `false` if not.
+      const hasWarning = (modal) => {
+        const warnings = modal.findComponent(EntityUploadWarnings);
+        if (!warnings.exists()) return false;
+        const { missingProperties } = warnings.props();
+        return missingProperties != null && missingProperties.length === 1 &&
+          missingProperties[0] === 'height';
+      };
+      return showModal()
+        // File that is exclusively new entities
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            ['', 'dogwood']
+          ]));
+          hasWarning(modal).should.be.true;
+        })
+        // File that is a mix of new entities and updates
+        .request(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            ['', 'dogwood'],
+            [id, 'elm']
+          ]));
+        })
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          hasWarning(modal).should.be.true;
+        })
+        // File that is exclusively updates
+        .request(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label'],
+            [id, 'elm']
+          ]));
+        })
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          hasWarning(modal).should.be.false;
+        })
+        // File with a header error
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label', 'label', 'circumference'],
+            ['', 'dogwood', 'dogwood', '1']
+          ]));
+          should.exist(modal.getComponent(EntityUploadErrors).props().duplicateColumns);
+          // Some warnings are shown, just not about missingProperties.
+          const warnings = modal.getComponent(EntityUploadWarnings).props();
+          warnings.extraProperties.should.eql(['circumference']);
+          should.not.exist(warnings.missingProperties);
+          warnings.count.should.equal(1);
+        })
+        // File with a data error
+        .afterResponses(async (modal) => {
+          await selectFile(modal, createCSV([
+            ['__id', 'label', 'circumference'],
+            ['', '', '1']
+          ]));
+          should.exist(modal.getComponent(EntityUploadErrors).props().dataError);
+          // Some warnings are shown, just not about missingProperties.
+          const warnings = modal.getComponent(EntityUploadWarnings).props();
+          warnings.extraProperties.should.eql(['circumference']);
+          should.not.exist(warnings.missingProperties);
+        });
+    });
+
+    it('shows an error about unknown entities', () => {
+      testData.extendedDatasets.createPast(1);
+      const newEntity = ['', 'New Entity'];
+      const csv = createCSV([
+        ['__id', 'label'],
+        // Page 1
+        ...new Array(5).fill(newEntity),
+        // Page 2
+        [faker.string.uuid(), 'Updated Entity'],
+        ...new Array(4).fill(newEntity),
+        // Page 3
+        [faker.string.uuid(), 'Updated Entity']
+      ]);
+      const findError = (modal) => {
+        const alerts = modal.findAllComponents(EntityUploadAlert);
+        if (alerts.length === 0) return modal.findComponent(EntityUploadAlert);
+        alerts.length.should.equal(1);
+        const text = alerts[0].get('p').text();
+        text.should.startWith('Some rows contain Entity IDs that were not found');
+        return alerts[0];
+      };
+      return showModal()
+        .afterResponse(async (modal) => {
+          await selectFile(modal, csv);
+          findError(modal).exists().should.be.false;
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          const { serverEntities } = modal.vm.$container.requestData.localResources;
+          serverEntities.dataExists.should.be.true;
+          serverEntities.size.should.equal(0);
+
+          const errors = modal.getComponent(EntityUploadErrors).props();
+          errors.count.should.equal(1);
+          should.exist(errors.unknownEntities);
+          findError(modal).props().ranges.should.eql([[6, 6]]);
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Next page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          // As additional unknown entities are discovered, they are added to
+          // the list.
+          findError(modal).props().ranges.should.eql([[6, 6], [11, 11]]);
+        })
+        .request(modal =>
+          modal.get('.pagination [aria-label="Previous page"]').trigger('click'))
+        .modify(respondWithEntities)
+        .afterResponse(modal => {
+          // The first unknown entity is not added a second time.
+          findError(modal).props().ranges.should.eql([[6, 6], [11, 11]]);
+        })
+        .request(modal => {
+          const a = findError(modal).findAll('a');
+          a.length.should.equal(2);
+          return a[1].trigger('click');
+        })
+        .modify(respondWithEntities)
+        .afterResponse(async (modal) => {
+          const table = modal.getComponent(EntityUploadTable);
+          table.props().rowIndex.should.equal(10);
+          table.props().highlighted.should.eql([10, 10]);
+
+          // Selecting any file clears the error.
+          await selectFile(modal, csv);
+          findError(modal).exists().should.be.false;
+        });
+    });
+  });
+
+  it('shows row counts', () => {
+    const csv = createCSV([
+      ['__id', 'label'],
+      ['', 'dogwood'],
+      ['', 'elm'],
+      [uuid(), 'pine']
+    ]);
+    return showModal()
+      .request(modal => selectFile(modal, csv))
+      .modify(respondWithEntities)
+      .afterResponse(modal => {
+        const counts = modal.getComponent(EntityUploadRowCounts).props();
+        counts.should.eql({ created: 2, updated: 1 });
+      });
   });
 });

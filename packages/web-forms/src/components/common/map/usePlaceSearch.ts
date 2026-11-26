@@ -4,7 +4,9 @@ import { computed, ref, shallowRef } from 'vue';
 
 const SEARCH_DELAY_MS = 1000;
 const GEOCODING_URL = 'https://geocode.googleapis.com/v4/geocode/address/';
-const GEOCODING_FIELDS = 'results.formattedAddress,results.viewport,results.granularity';
+const GEOCODING_FIELDS =
+  'results.formattedAddress,results.location,results.viewport,results.granularity';
+const ANTIMERIDIAN_LONGITUDE = 180;
 const AREA_GRANULARITY = 'APPROXIMATE';
 const MIN_QUERY_LENGTH = 3;
 const MAX_PLACE_RESULTS = 4;
@@ -24,6 +26,7 @@ interface LatLng {
 
 interface GeocodingResult {
   formattedAddress: string;
+  location: LatLng;
   viewport: { low: LatLng; high: LatLng };
   granularity: string;
 }
@@ -40,15 +43,37 @@ export interface PlaceSearchResult {
 
 const buildPlaceSearchUrl = (query: string) => GEOCODING_URL + encodeURIComponent(query);
 
+/**
+ * The map doesn't wrap around (wrapping duplicated it), so it can't show a place that crosses
+ * the 180° line. We cut the viewport at the line and keep the side where the place is located.
+ */
+const buildLonLatViewport = (result: GeocodingResult): Extent => {
+  const { low, high } = result.viewport;
+  if (low.longitude <= high.longitude) {
+    return [low.longitude, low.latitude, high.longitude, high.latitude];
+  }
+
+  if (result.location.longitude >= low.longitude) {
+    return [low.longitude, low.latitude, ANTIMERIDIAN_LONGITUDE, high.latitude];
+  }
+
+  return [-ANTIMERIDIAN_LONGITUDE, low.latitude, high.longitude, high.latitude];
+};
+
 const parsePlaceSearchResponse = (body: GeocodingResponse): PlaceSearchResult[] => {
-  return (body.results ?? []).slice(0, MAX_PLACE_RESULTS).map((result) => {
-    const { low, high } = result.viewport;
-    return {
-      label: result.formattedAddress,
-      lonLatViewport: [low.longitude, low.latitude, high.longitude, high.latitude],
-      isArea: result.granularity === AREA_GRANULARITY,
-    };
-  });
+  return (body.results ?? [])
+    .map((result) => {
+      return {
+        label: result.formattedAddress,
+        lonLatViewport: buildLonLatViewport(result),
+        isArea: result.granularity === AREA_GRANULARITY,
+      };
+    })
+    .filter((place, index, places) => {
+      // Google can name two places the same (a city and its province); keep the first.
+      return places.findIndex((other) => other.label === place.label) === index;
+    })
+    .slice(0, MAX_PLACE_RESULTS);
 };
 
 const searchPlaces = async (

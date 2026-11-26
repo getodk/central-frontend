@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Essayer encore"
+        },
+        "recover": {
+          "string": "Récupérer"
+        },
+        "discard": {
+          "string": "Supprimer"
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": "Récupérer votre travail ?"
+        },
+        "body": {
+          "string": "Votre formulaire s'est fermé de manière inattendue le {date} et a été enregistré. Voulez-vous continuer avec ce formulaire ?"
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "Les données sont valides"
         },
         "body": {
-          "string": "Les données renseignées sont valides, mais ne peuvent être soumises car il s'agit d'un aperçu du Formulaire."
+          "string": "Les données saisies sont valides, mais elles n'ont pas été envoyées, car il s'agit d'un aperçu du formulaire."
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formulaire envoyé avec succès !"
+          "string": "Envoyé"
         },
         "body": {
-          "string": "Vous pouvez remplir ce Formulaire à nouveau ou le fermer si vous avez terminé."
+          "string": "Merci pour votre soumission. Vous pouvez remplir à nouveau ce formulaire ou le fermer si vous avez terminé."
         },
         "action": {
           "fillOutAgain": {
-            "string": "Remplir à nouveau"
+            "string": "Nouvelle soumission"
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Soumission réussie"
+          "string": "Envoyé"
         },
         "body": {
           "string": "Vous allez être redirigé"
@@ -77,12 +91,12 @@
           "string": "Erreur de Soumission"
         },
         "body": {
-          "string": "Vos données ne sont pas soumises. Message d'erreur : {errorMessage} Vous pouvez fermer cette boite de dialogue et essayer à nouveau. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce Formulaire ou {supportEmail}."
+          "string": "Vos données n'ont pas été envoyées. Message d'erreur : {errorMessage} Vous pouvez fermer cette boîte de dialogue et réessayer. Si l'erreur persiste, veuillez contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Envoi de la Soumission"
+          "string": "Envoi en cours"
         },
         "body": {
           "string": "Votre donnée est en cours de soumission. Merci de ne pas fermer cette fenêtre avant que ce soit terminé."
@@ -108,7 +122,7 @@
           "string": "Erreur de soumission"
         },
         "body": {
-          "string": "Vos données n'ont pas été soumises. Veuillez cliquer le bouton \"Essayer encore\" pour réessayer. Si l'erreur persiste, merci de contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
+          "string": "Vos données n'ont pas été entièrement envoyées. Veuillez appuyer sur le bouton « Réessayer » pour recommencer. Si l'erreur persiste, veuillez contacter la personne qui vous a demandé de remplir ce formulaire ou {supportEmail}."
         }
       },
       "util": {

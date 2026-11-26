@@ -235,7 +235,7 @@ const deleteProperty = () => {
     "none": "(Nessuna)",
     "confirmation": {
       "title": "Elimina proprietà",
-      "body": "Sei sicuro di voler eliminare la proprietà? “{propertyName}”? Questo è irreversibile.",
+      "body": "Sei sicuro di voler eliminare la proprietà “{propertyName}”? L'operazione è irreversibile.",
       "confirm": "@:action.delete"
     },
     "deleted": "La proprietà “{name}” è stata eliminata."
@@ -265,8 +265,11 @@ const deleteProperty = () => {
     "emptyTable": "此實體清單中的實體沒有任何使用者定義的屬性。",
     "none": "(無)",
     "confirmation": {
+      "title": "刪除屬性",
+      "body": "確定要刪除屬性「{propertyName}」嗎？此操作無法復原。",
       "confirm": "@:action.delete"
-    }
+    },
+    "deleted": "屬性「{name}」已刪除。"
   }
 }
 </i18n>

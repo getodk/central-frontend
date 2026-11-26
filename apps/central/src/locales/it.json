@@ -85,6 +85,7 @@
         "delete": "@:audit.action.default.delete"
       },
       "entity": {
+        "bulk_upsert": "Importa dati",
         "bulk_delete": "Eliminazione in blocco",
         "bulk_restore": "Ripristino in blocco"
       },
@@ -172,6 +173,7 @@
     "refreshPage": "Aggiorna la pagina",
     "resetPassword": "Resetta la password",
     "review": "Rivedi",
+    "revoke": "Revoca",
     "save": "Salvare",
     "saveSettings": "Salva le impostazioni",
     "sort": "Ordina",
@@ -187,7 +189,6 @@
     "reset": "Ripristina",
     "change": "Modifica",
     "upload": "Carica",
-    "reviewParallelUpdates": "Rivedi gli aggiornamenti paralleli",
     "restore": "Ripristino"
   },
   "field": {
@@ -198,7 +199,7 @@
     "name": "Nome",
     "newPassword": "Nuova password",
     "oldPassword": "Vecchia password",
-    "passphrase": "Crittografa la password",
+    "passphrase": "Password di crittografia",
     "password": "Password",
     "passwordConfirm": "Nuova password (conferma)",
     "title": "Titolo",
@@ -356,16 +357,17 @@
     "table": "Tabella",
     "total": "Totale",
     "totalSubmissions": "Invii totali",
-    "propertiesCount": "{inform} di {count} propietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
+    "propertiesCount": "{inform} di {count} proprietà | {inform} di {count} proprietà | {inform} di {count} proprietà",
     "new": "Novità!",
     "totalEntities": "Entità totali",
     "versionShort": "v{version}",
     "warning": "Avvertimento",
-    "recommended": "raccomandato",
+    "recommended": "Consigliato",
     "none": "(nessuno)",
     "search": "Cerca",
     "useEnketo": "Modalità di compatibilità con Enketo",
     "updateInProgress": "Richiesta di aggiornamento in corso",
+    "preview": "Anteprima",
     "reviewState": "Stato Revisione",
     "status": "Stato",
     "version": "Versione",
@@ -413,11 +415,6 @@
   },
   "router": {
     "unsavedChanges": "Sei sicuro di voler lasciare questa pagina? Le tue modifiche potrebbero non essere salvate."
-  },
-  "formStateDescription": {
-    "open": "Questo Formulario è scaricabile e accetta Invii.",
-    "closing": "Questo Formulario non è scaricabile e ma tuttavia accetta Invii.",
-    "closed": "Questo Formulario non è scaricabile e non accetta Invii."
   },
   "requestData": {
     "project": {

@@ -99,8 +99,7 @@ const afterCreateDataset = async (dataset) => {
         "Entities are created through form design and can be attached to any Form."
       ],
       // This is the text of a button that is used to create a new Entity List.
-      // It is shown next to a heading whose text is "Entity Lists".
-      "new": "New"
+      "new": "New Entity List"
     }
   }
 </i18n>
@@ -112,43 +111,38 @@ const afterCreateDataset = async (dataset) => {
     "heading": [
       "Entity umožňují sdílet informace mezi formuláři, takže můžete shromažďovat longitudinální data, spravovat případy v čase a reprezentovat další pracovní postupy s více kroky.",
       "Entity se vytvářejí prostřednictvím návrhu formuláře a lze je připojit k libovolnému formuláři."
-    ],
-    "new": "Nový"
+    ]
   },
   "de": {
     "heading": [
       "Objekte ermöglichen es Ihnen, Informationen zwischen Formularen zu teilen, sodass Sie longitudinale Daten sammeln, Fälle im Laufe der Zeit verwalten und andere Arbeitsabläufe mit mehreren Schritten darstellen können.",
       "Objekte werden durch Formulardesign erstellt und können jedem Formular angefügt werden."
-    ],
-    "new": "Neu"
+    ]
   },
   "es": {
     "heading": [
       "Las entidades le permiten compartir información entre formularios para que pueda recopilar datos longitudinales, gestionar casos a lo largo del tiempo y representar otros flujos de trabajo con varios pasos.",
       "Las entidades se crean mediante el diseño del formulario y pueden adjuntarse a cualquier formulario."
-    ],
-    "new": "Nueva"
+    ]
   },
   "fr": {
     "heading": [
       "Les entités vous permettent de partager de l'information entre vos formulaires. Vous pouvez ainsi collecter des données longitudinales, suivre des cas dans le temps, et créer d'autres processus à multiples étapes.",
       "Les entités sont créées dans vos définitions de formulaires et peuvent être jointes à n'importe quel formulaire."
     ],
-    "new": "Nouvelle"
+    "new": "Nouvelle liste d'entités"
   },
   "it": {
     "heading": [
       "Le entità consentono di condividere le informazioni tra i formulari per raccogliere dati longitudinali, gestire i casi nel tempo e rappresentare altri flussi di lavoro con più passaggi.",
       "Le entità vengono create attraverso la progettazione dei formulari e possono essere allegate a qualsiasi formulario."
-    ],
-    "new": "Nuova"
+    ]
   },
   "pt": {
     "heading": [
       "As Entidades permitem que você compartilhe informações entre Formulários para que você possa coletar dados longitudinais, gerenciar casos ao longo do tempo e representar outros fluxos de trabalho com várias etapas.",
       "As Entidades são criadas por meio do design do formulário e podem ser anexadas a qualquer Formulário."
-    ],
-    "new": "Nova"
+    ]
   },
   "sw": {
     "heading": [
@@ -160,15 +154,13 @@ const afterCreateDataset = async (dataset) => {
     "heading": [
       "实体功能支持跨表单共享信息，便于您收集纵向数据、进行长期案例管理，以及实现多步骤工作流程。",
       "实体通过表单设计创建，可关联至任意表单。"
-    ],
-    "new": "更新"
+    ]
   },
   "zh-Hant": {
     "heading": [
       "實體清單允許您在表單之間共用資訊，以便收集縱向資料、隨時間管理案例，並透過多個步驟表示其他工作流程。",
       "實體是透過表單設計建立的，可以附加到任何表單。"
-    ],
-    "new": "新增"
+    ]
   }
 }
 </i18n>

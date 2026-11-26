@@ -33,6 +33,20 @@
         },
         "tryAgain": {
           "string": "Inténtalo de nuevo"
+        },
+        "recover": {
+          "string": "Recuperar"
+        },
+        "discard": {
+          "string": "Descartar"
+        }
+      },
+      "autosaveModal": {
+        "title": {
+          "string": "¿Recuperar su trabajo?"
+        },
+        "body": {
+          "string": "Su formulario se cerró inesperadamente el {date} y se guardó. ¿Desea continuar con este formulario?"
         }
       },
       "previewModal": {
@@ -40,19 +54,19 @@
           "string": "Los datos son válidos"
         },
         "body": {
-          "string": "Los datos introducidos son válidos, pero no se han enviado porque se trata de una vista previa del formulario."
+          "string": "Los datos que ingresó son válidos, pero no se enviaron porque esta es una vista previa del formulario."
         }
       },
       "submissionModal": {
         "title": {
-          "string": "Formulario enviado correctamente"
+          "string": "Enviado"
         },
         "body": {
-          "string": "Puede rellenar este formulario de nuevo o cerrarlo si ha terminado."
+          "string": "Gracias por su envío. Puede completar este formulario de nuevo o cerrarlo si ya terminó."
         },
         "action": {
           "fillOutAgain": {
-            "string": "Rellenar de nuevo"
+            "string": "Enviar otro"
           }
         }
       },
@@ -66,7 +80,7 @@
       },
       "editSubmissionModal": {
         "title": {
-          "string": "Envío correcto"
+          "string": "Enviado"
         },
         "body": {
           "string": "Ahora será redirigido."
@@ -77,12 +91,12 @@
           "string": "Error de envío"
         },
         "body": {
-          "string": "No se han enviado sus datos. Mensaje de error: {errorMessage} Puede cerrar este cuadro de diálogo e intentarlo de nuevo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
+          "string": "Sus datos no se enviaron. Mensaje de error: {errorMessage} Puede cerrar este cuadro de diálogo e intentarlo de nuevo. Si el error persiste, comuníquese con la persona que le pidió completar este formulario o con {supportEmail}."
         }
       },
       "sendingDataModal": {
         "title": {
-          "string": "Enviando el formulario"
+          "string": "Enviando datos"
         },
         "body": {
           "string": "Se están enviando sus datos. No cierre esta ventana hasta que haya terminado."
@@ -108,7 +122,7 @@
           "string": "Error de envío"
         },
         "body": {
-          "string": "Sus datos no se han enviado completamente. Por favor, pulse el botón «Inténtelo de nuevo» para volver a intentarlo. Si el error persiste, póngase en contacto con la persona que le pidió que rellenara este formulario o con {supportEmail}."
+          "string": "Sus datos no se enviaron por completo. Presione el botón “Intentar de nuevo” para volver a intentarlo. Si el error persiste, comuníquese con la persona que le pidió completar este formulario o con {supportEmail}."
         }
       },
       "util": {

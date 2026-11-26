@@ -401,11 +401,25 @@ export default {
           }
         ]
       },
-      {}
+      {
+        "introduction": [
+          "Wählen Sie zuerst ein Verschlüsselungspasswort. Der Server speichert dieses Passwort nicht. Nur wer es kennt, kann Ihre Übermittlungen entschlüsseln und lesen.",
+          {
+            "full": "Wenn Sie dieses Verschlüsselungspasswort verlieren, gibt es {no} Möglichkeit, es oder Ihre Daten wiederherzustellen.",
+            "no": "keine"
+          }
+        ]
+      }
     ],
     "success": [
       "Für dieses Projekt wurde Verschlüsselung aktiviert. Alle Mobilgeräte müssen die neuesten Formulare herunterladen damit die Verschlüsselung auch durchgeführt wird."
-    ]
+    ],
+    "field": {
+      "hint": "Hinweis zum Verschlüsselungspasswort (optional)"
+    },
+    "alert": {
+      "passphraseTooShort": "Das Verschlüsselungspasswort muss mindestens 10 Zeichen lang sein."
+    }
   },
   "es": {
     "title": "Habilitar el cifrado",
@@ -552,7 +566,7 @@ export default {
             "I nuovi invii non verranno più elaborati in Entità."
           ],
           [
-            "Inoltre, quanto segue è reale in questa versione di ODK Central:",
+            "Inoltre, in questa versione di ODK Central vale quanto segue:",
             [
               "Gli invii esistenti rimarranno non crittografati."
             ],
@@ -567,11 +581,25 @@ export default {
           }
         ]
       },
-      {}
+      {
+        "introduction": [
+          "Per prima cosa, scegli una password di crittografia. Il server non memorizza questa password. Solo chi la conosce può decrittare e leggere i dati degli invii.",
+          {
+            "full": "Se perdi questa password di crittografia, non ci sarà {no} modo di recuperarla, né di recuperare i tuoi dati.",
+            "no": "nessun"
+          }
+        ]
+      }
     ],
     "success": [
       "La crittografia è stata configurata per questo progetto. Tutti i dispositivi mobili dovranno prendere o recuperare i formulari più recenti affinché la crittografia possa avvenire."
-    ]
+    ],
+    "field": {
+      "hint": "Suggerimento per la password di crittografia (facoltativo)"
+    },
+    "alert": {
+      "passphraseTooShort": "La password di crittografia deve contenere almeno 10 caratteri."
+    }
   },
   "ja": {
     "title": "暗号化を有効にする",
@@ -715,11 +743,25 @@ export default {
           }
         ]
       },
-      {}
+      {
+        "introduction": [
+          "首先，请选择加密密码。服务器不会存储此密码。只有知道该密码的人才能解密并读取您的提交数据。",
+          {
+            "full": "如果你丢失了这个加密密码，就{no}法恢复此密码或你的数据。",
+            "no": "无"
+          }
+        ]
+      }
     ],
     "success": [
       "加密功能已在此项目中配置完成。所有移动设备必须获取或重新获取最新版本的表单，才可以启用加密。"
-    ]
+    ],
+    "field": {
+      "hint": "加密密码提示（可选）"
+    },
+    "alert": {
+      "passphraseTooShort": "加密密码长度至少为 10 个字符。"
+    }
   },
   "zh-Hant": {
     "title": "啟用加密",
@@ -755,11 +797,25 @@ export default {
           }
         ]
       },
-      {}
+      {
+        "introduction": [
+          "首先，請選擇一組加密密碼。伺服器不會儲存此密碼，只有知道密碼的人才能解密並讀取您的提交資料。",
+          {
+            "full": "如果您遺失此加密密碼，將{no}任何方法可以復原密碼或您的資料。",
+            "no": "沒有"
+          }
+        ]
+      }
     ],
     "success": [
       "已為此專案配置加密。任何行動裝置都必須取得或重新取得最新的表單才能進行加密。"
-    ]
+    ],
+    "field": {
+      "hint": "加密密碼提示（選填）"
+    },
+    "alert": {
+      "passphraseTooShort": "加密密碼長度至少須為 10 個字元。"
+    }
   }
 }
 </i18n>

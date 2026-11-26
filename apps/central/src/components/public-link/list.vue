@@ -229,6 +229,7 @@ export default {
     "emptyTable": "Es gibt keine öffentlichen Zugangslinks für dieses Formular.",
     "alert": {
       "create": "Ihr öffentlicher Zugangslink wurde erfolgreich erstellt und ist jetzt live. Kopieren Sie ihn unten, um ihn zu verteilen.",
+      "edit": "Der öffentliche Zugangslink „{displayName}“ wurde aktualisiert.",
       "revoke": "Der öffentliche Zugangslink \"{displayName}\" wurde erfolgreich widerrufen. Keine weiteren Übermittlungen über diesen Link werden akzeptiert."
     }
   },
@@ -309,6 +310,7 @@ export default {
     "emptyTable": "Non ci sono link di accesso pubblico per questo formulario.",
     "alert": {
       "create": "Il tuo link di accesso pubblico è stato creato ed è ora attivo. Copialo qui sotto per distribuirlo.",
+      "edit": "Link con accesso pubblico “{displayName}” aggiornato.",
       "revoke": "Il link di accesso pubblico \"{displayName}\" è stato revocato con successo. Non saranno accettati ulteriori Invii utilizzando questo Link."
     }
   },
@@ -387,6 +389,7 @@ export default {
     "emptyTable": "此表单没有公开访问链接。",
     "alert": {
       "create": "您的公开访问链接已生成并生效。请复制下方链接进行使用。",
+      "edit": "公开访问链接“{displayName}”已成功更新。",
       "revoke": "公开访问链接 “{displayName}” 已成功撤销。此链接将不再接受任何提交。"
     }
   },
@@ -407,6 +410,7 @@ export default {
     "emptyTable": "此表格沒有公共存取連結。",
     "alert": {
       "create": "您的公共存取連結已建立並且現已上線。複製下面的內容進行分發。",
+      "edit": "公開存取連結「{displayName}」已成功更新。",
       "revoke": "公共存取連結“{displayName}”已成功撤銷。使用此連結將不再接受任何提交。"
     }
   }

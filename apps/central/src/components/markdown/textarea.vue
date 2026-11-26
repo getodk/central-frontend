@@ -17,7 +17,7 @@ except according to the terms contained in the LICENSE file.
       @input="$emit('update:modelValue', $event.target.value)">
     </textarea>
     <div v-if="!emptyValue && previewMode" class="preview-container">
-      <p class="heading">{{ $t('preview') }}</p>
+      <p class="heading">{{ $t('common.preview') }}</p>
       <markdown-view :raw-markdown="modelValue"/>
     </div>
     <div v-show="!emptyValue || showFooter " class="markdown-textarea-actions">
@@ -146,9 +146,7 @@ export default {
 {
   "en": {
     // This is a link to an external website with Markdown style guidelines
-    "markdownSupported": "Markdown supported",
-    // This is text shown as a label above the preview of Markdown formatting (special formatting of user-submitted text)
-    "preview": "Preview"
+    "markdownSupported": "Markdown supported"
   }
 }
 </i18n>
@@ -157,48 +155,37 @@ export default {
 <i18n>
 {
   "cs": {
-    "markdownSupported": "Markdown podporován",
-    "preview": "Náhled"
+    "markdownSupported": "Markdown podporován"
   },
   "de": {
-    "markdownSupported": "unterstützt durch Markdown",
-    "preview": "Vorschau"
+    "markdownSupported": "unterstützt durch Markdown"
   },
   "es": {
-    "markdownSupported": "soporte Markdown",
-    "preview": "Vista previa"
+    "markdownSupported": "soporte Markdown"
   },
   "fr": {
-    "markdownSupported": "Syntaxe Markdown supportée",
-    "preview": "Aperçu"
+    "markdownSupported": "Syntaxe Markdown supportée"
   },
   "id": {
-    "markdownSupported": "Markdown didukung",
-    "preview": "Pratinjau"
+    "markdownSupported": "Markdown didukung"
   },
   "it": {
-    "markdownSupported": "Markdown supportato",
-    "preview": "Anteprima"
+    "markdownSupported": "Markdown supportato"
   },
   "ja": {
-    "markdownSupported": "マークダウンがサポートされています。",
-    "preview": "プレビュー"
+    "markdownSupported": "マークダウンがサポートされています。"
   },
   "pt": {
-    "markdownSupported": "Formatação em estilo Markdown suportada",
-    "preview": "Visualização"
+    "markdownSupported": "Formatação em estilo Markdown suportada"
   },
   "sw": {
-    "markdownSupported": "Markdown inatumika",
-    "preview": "Hakiki"
+    "markdownSupported": "Markdown inatumika"
   },
   "zh": {
-    "markdownSupported": "支持Markdown语法",
-    "preview": "预览"
+    "markdownSupported": "支持Markdown语法"
   },
   "zh-Hant": {
-    "markdownSupported": "支持 Markdown 語法",
-    "preview": "預覽"
+    "markdownSupported": "支持 Markdown 語法"
   }
 }
 </i18n>

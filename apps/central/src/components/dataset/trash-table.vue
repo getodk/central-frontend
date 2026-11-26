@@ -183,6 +183,7 @@ const onToggleTrashExpansion = (evt) => {
     "trashCount": "（{count}）"
   },
   "zh-Hant": {
+    "message": "實體清單在垃圾桶中 30 天後會被刪除",
     "deletedAt": "刪除於",
     "trashCount": "({count})"
   }

@@ -187,7 +187,21 @@ defineEmits(['hide']);
   },
   "zh": {
     "title": "删除属性",
-    "moreEntities": "以及其他 {count} 个实体"
+    "intro": "在删除属性“{propertyName}”之前，您必须：",
+    "clearEntities": "清除其在 {count} 个实体中的值",
+    "unlinkForms": "取消关联 {count} 个设置该属性的表单",
+    "relatedToEntities": "在 {count} 个实体中设置",
+    "moreEntities": "以及其他 {count} 个实体",
+    "relatedToForms": "由 {count} 个表单设置"
+  },
+  "zh-Hant": {
+    "title": "刪除屬性",
+    "intro": "刪除屬性「{propertyName}」前，您必須：",
+    "clearEntities": "清除{count}個實體中的此屬性值",
+    "unlinkForms": "取消連結設定此屬性的{count}個表單",
+    "relatedToEntities": "已在{count}個實體中設定",
+    "moreEntities": "及另外{count}個實體",
+    "relatedToForms": "由{count}個表單設定"
   }
 }
 </i18n>

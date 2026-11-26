@@ -145,12 +145,14 @@ const dsHashset = computed(() =>
   },
   "zh": {
     "header": {
-      "uploaded": "已上传"
+      "uploaded": "已上传",
+      "size": "大小"
     }
   },
   "zh-Hant": {
     "header": {
-      "uploaded": "已上傳"
+      "uploaded": "已上傳",
+      "size": "大小"
     }
   }
 }

@@ -15,7 +15,7 @@ except according to the terms contained in the LICENSE file.
       <span>{{ $t('title') }}</span>
     </template>
     <template #body>
-      <iframe :src="iframeSrc" :title="$t('title')"></iframe>
+      <iframe :src="iframeSrc" :title="$t('title')" referrerpolicy="strict-origin"></iframe>
     </template>
   </page-section>
 </template>

@@ -16,7 +16,6 @@ except according to the terms contained in the LICENSE file.
     <navbar v-show="routerReady"/>
     <outdated-version/>
     <alerts/>
-    <feedback-button v-if="showsFeedbackButton"/>
     <div ref="containerEl" class="container-fluid">
       <router-view/>
     </div>
@@ -49,7 +48,6 @@ export default {
     Alerts,
     HoverCards: defineAsyncComponent(loadAsync('HoverCards')),
     Navbar,
-    FeedbackButton: defineAsyncComponent(loadAsync('FeedbackButton')),
     OutdatedVersion: defineAsyncComponent(loadAsync('OutdatedVersion'))
   },
   inject: ['alert', 'config', 'location'],
@@ -71,11 +69,7 @@ export default {
   computed: {
     routerReady() {
       return this.$route !== START_LOCATION;
-    },
-    showsFeedbackButton() {
-      return this.config.loaded && this.config.showsFeedbackButton &&
-        this.visiblyLoggedIn;
-    },
+    }
   },
   created() {
     this.callWait('checkVersion', this.checkVersion, (tries) =>
