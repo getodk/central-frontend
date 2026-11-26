@@ -64,7 +64,7 @@ export const number = new FunctionImplementation(
     const { type } = results;
 
     if (type === 'NUMBER') {
-      return results;
+      return new NumberEvaluation(context, numberValue);
     }
 
     if (type === 'NODE' || type === 'STRING') {
