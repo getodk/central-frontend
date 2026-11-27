@@ -976,9 +976,6 @@ describe('Form submission', () => {
             metaNamespaceURI: OPENROSA_XFORMS_NAMESPACE_URI,
           });
         });
-
-        // This is redundant to other tests already exercising unprefixed names!
-        it.skip('preserves the default/un-prefixed namespace when used in the form definition');
       });
 
       describe('defaults when absent in form definition', () => {

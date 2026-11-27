@@ -31,7 +31,6 @@ import { initializeTestForm } from '../client/init.ts';
 import { isRepeatRange } from '../client/predicates.ts';
 import { runInSolidScope } from '../client/solid-helpers.ts';
 import { getClosestRepeatRange, getNodeForReference } from '../client/traversal.ts';
-import { ImplementationPendingError } from '../error/ImplementationPendingError.ts';
 import { UnclearApplicabilityError } from '../error/UnclearApplicabilityError.ts';
 import type { ReactiveScenario } from '../reactive/ReactiveScenario.ts';
 import { SharedJRResourceService } from '../resources/SharedJRResourceService.ts';
@@ -687,81 +686,6 @@ export class Scenario {
     }
 
     return new JRTreeReference(treeReferenceNode.currentState.reference);
-  }
-
-  /**
-   * **PORTING NOTES**
-   *
-   * At time of writing, this comment contains the following sections:
-   *
-   * 1. JavaRosa's current JavaDoc comment for the same-named method.
-   * 2. Revised understanding of the intended semantics of the method as it
-   *    exists in JavaRosa, and notes on the accuracy of that JavaDoc comment
-   *    relative to observations of its call sites.
-   * 3. Revised explanation of our current deferral of the method's
-   *    implemenation, as relates to that understanding.
-   * 4. A quote describing conceptual context for the method's origin in
-   *    JavaRosa (as preserved from review of the first pass porting JavaRosa
-   *    tests to Web Forms).
-   *
-   * - - -
-   *
-   * {@link https://github.com/getodk/javarosa/blob/7986abae78dc0dfe8715fa0071cd04ab698db9bb/src/main/java/org/javarosa/test/Scenario.java#L265-L268 | JR}:
-   *
-   * > Returns a new Scenario instance using a new form obtained by serializing
-   * > and deserializing the form being used by this instance.
-   *
-   * - - -
-   *
-   * Observing call sites of this method, in tests as they are written in
-   * JavaRosa (and as they've been ported to Web Forms), the above comment is
-   * misleading and incomplete! The **semantic intent** of the method—as named
-   * and as clarified in conversation with @lognaturel—is to serialize and
-   * deserialize a **form definition** (presumably including attachments and any
-   * other requisite data _relating to the form definition itself_).
-   *
-   * Actual usage in practice frequently goes well beyond that semantic intent!
-   * In usage, what is actually serialized and deserialized is the composition
-   * of:
-   *
-   * - form definition (etc)
-   * - instance state, equivalent to
-   *   {@link serializeAndRestoreInstanceState} (and roughly equivalent
-   *   to {@link serializeAndDeserializeInstance})
-   *
-   * We have already updated some of ported call sites to this method to reflect
-   * this mismatch of semantic intent. We will likely make the same change to
-   * many other call sites, where the same mismatched intent is presumed, and as
-   * functionality progresses to make the affected tests pertinent.
-   *
-   * - - -
-   *
-   * We have deferred implementation of this method pending support for **form
-   * definition serde** (including form attachments, potentially other
-   * metadata). Our _reasons_ for implementing such functionality will likely be
-   * different from JavaRosa's (detailed in the quote below, which was
-   * reiterated almost verbatim in conversation with @lognaturel yesterday!).
-   * But we will almost certainly implement it! It'll be useful to retain this
-   * method for its original semantic intent, even as many other call sites
-   * drift from it.
-   *
-   * - - -
-   *
-   * **PORTING NOTES** (PRESERVED FROM EARIER ITERATIONS)
-   *
-   * From
-   * {@link https://github.com/getodk/web-forms/pull/110#discussion_r1610546665 | this review comment}:
-   *
-   * > [JavaRosa] defines a compact format of its in-memory form representation.
-   * > Collect writes that out to disk after initial form parse and then always
-   * > reads form definitions from their serialized representation. This
-   * > improved performance greatly on older hardware and now only leads to
-   * > notable performance improvements on certain forms.
-   */
-  serializeAndDeserializeForm(): Promise<this> {
-    return Promise.reject(
-      new ImplementationPendingError('Form definition serialization/deserialization')
-    );
   }
 
   /**
