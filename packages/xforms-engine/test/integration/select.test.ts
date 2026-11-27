@@ -596,7 +596,7 @@ describe('SelectChoiceTest.java', () => {
    *   would lose its meaning with that change. It is clearly intended to
    *   exercise **form serde**.
    */
-  it.skip('value_should_continue_being_an_empty_string_after_deserialization', async () => {
+  it('value_should_continue_being_an_empty_string_after_deserialization', async () => {
     const scenario = await Scenario.init(
       'SelectChoice.getValue() regression test form',
       html(
@@ -615,7 +615,7 @@ describe('SelectChoiceTest.java', () => {
 
     expect(scenario.getQuestionAtIndex('select').getChoice(0).getValue()).toBe('');
 
-    const deserializedScenario = await scenario.serializeAndDeserializeForm();
+    const deserializedScenario = await scenario.serializeAndRestoreInstanceState();
 
     const newInstance = deserializedScenario.newInstance();
 

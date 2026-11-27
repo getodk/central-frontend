@@ -60,14 +60,14 @@ describe('Instance output (serialization)', () => {
 
     describe('instance name', () => {
       describe('for reference in main instance', () => {
-        it.skip('is always null', async () => {
+        it('is always null', async () => {
           const scenario = await getSimplestFormScenario();
 
           scenario.next('/data/a');
 
           expect(scenario.refAtIndex().getInstanceName()).toEqual(nullValue());
 
-          const deserialized = await scenario.serializeAndDeserializeForm();
+          const deserialized = await scenario.serializeAndRestoreInstanceState();
 
           deserialized.next('/data/a');
 

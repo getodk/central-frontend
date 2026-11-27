@@ -126,18 +126,6 @@ describe('XPath function support: `digest`', () => {
         expectedOutput: 'd41d8cd98f00b204e9800998ecf8427e',
       },
     ])('$testName', ({ algorithm, inputValue, encoding, expectedOutput }) => {
-      /**
-       * **PORTING NOTES**
-       *
-       * JavaRosa's test exercises the internal implementation API here. The
-       * next test exercises the `digest` function as used in a form, which is
-       * probably sufficient for our use case. Note that there are also several
-       * `digest` tests in the `xpath` package, and it seems highly unlikely
-       * that an integration test here would behave differently. But the next
-       * test is ported anyway for the sake of completeness.
-       */
-      it.skip('generates a digest');
-
       describe('`digest` function', () => {
         it('accepts dynamic parameters', async () => {
           const scenario = await Scenario.init(
