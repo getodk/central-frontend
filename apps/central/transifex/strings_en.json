@@ -3632,6 +3632,9 @@
       "problem": {
         "409_6": {
           "string": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+        },
+        "409_25": {
+          "string": "The draft is being published by another user."
         }
       },
       "field": {
