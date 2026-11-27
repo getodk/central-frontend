@@ -23,13 +23,18 @@ const EPOCH = Temporal.PlainDate.from('1970-01-01');
  * @returns A {@link DatetimeRuntimeValue}
  */
 const parseString = (value: string): DatetimeRuntimeValue => {
-  if (value == null || typeof value !== 'string' || value.length === 0) {
+  if (value == null || typeof value !== 'string') {
+    return null;
+  }
+
+  value = value.trim();
+  if (value.length === 0) {
     return null;
   }
 
   const num = Number(value);
   if (Number.isFinite(num)) {
-    return EPOCH.add({ days: num });
+    return EPOCH.add({ days: Math.floor(num) });
   }
 
   if (!ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)) {

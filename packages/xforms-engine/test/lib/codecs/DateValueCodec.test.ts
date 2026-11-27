@@ -24,10 +24,19 @@ describe('DateValueCodec', () => {
   describe('decode', () => {
     it.each([
       { input: '', expected: null },
+      { input: ' ', expected: null },
       { input: 'garbage', expected: null },
       {
         input: '555',
         expected: Temporal.PlainDate.from({ year: 1971, month: 7, day: 10 }).toString(),
+      },
+      {
+        input: '555.8',
+        expected: Temporal.PlainDate.from({ year: 1971, month: 7, day: 10 }).toString(),
+      },
+      {
+        input: '2026',
+        expected: Temporal.PlainDate.from({ year: 1975, month: 7, day: 20 }).toString(),
       },
       {
         input: '2000-02-05',

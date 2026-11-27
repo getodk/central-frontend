@@ -316,6 +316,8 @@ describe('#date()', () => {
       { expression: "date('2012-01-01') < now()", expected: true },
       { expression: "date('2100-01-02') > now()", expected: true },
       { expression: 'now() > today()', expected: true },
+      { expression: 'now() >= today()', expected: true },
+      { expression: 'now() <= today() + 1', expected: true },
       { expression: '"2018-06-25" = "2018-06-25T00:00:00.000-07:00"', expected: false },
       { expression: '"2018-06-25" < "2018-06-25T00:00:00.000+07:00"', expected: false },
       { expression: '"2018-06-25" < "2018-06-25T00:00:00.001+00:00"', expected: true },

@@ -14,7 +14,18 @@ import { isValidTimeString } from '../../lib/datetime/predicates.ts';
 import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
 
 export const today = new FunctionImplementation('today', [], (context) => {
-  return new DateLikeEvaluation(context, Temporal.Now.plainDateISO());
+  const todayDateTime = now(context.timeZone).with({
+    hour: 0,
+    minute: 0,
+    second: 0,
+    millisecond: 0,
+    microsecond: 0,
+    nanosecond: 0,
+  });
+
+  return new DateLikeEvaluation(context, todayDateTime.toPlainDate(), {
+    numberValue: todayDateTime.epochMilliseconds / DAY_MILLISECONDS,
+  });
 });
 
 export const xfNow = new FunctionImplementation('now', [], (context) => {
