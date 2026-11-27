@@ -17,9 +17,7 @@ import { describe, expect, it } from 'vitest';
 import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.ts';
 import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
 import type { UntypedAnswer } from '../scenario/answer/UntypedAnswer.ts';
-import { Scenario, getRef } from '../scenario/jr/Scenario.ts';
-import { XPathPathExpr } from '../scenario/jr/xpath/XPathPathExpr.ts';
-import { XPathPathExprEval } from '../scenario/jr/xpath/XPathPathExprEval.ts';
+import { Scenario } from '../scenario/jr/Scenario.ts';
 
 describe('Relevance - TriggerableDagTest.java', () => {
   /**
@@ -257,244 +255,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
   });
 
   describe('non-relevant nodes', () => {
-    /**
-     * **PORTING NOTES**
-     *
-     * 1. This is almost certainly testing implementation details. We do not
-     *    expose anything like this in the engine/client interface, nor do we
-     *    anticipate doing so. Insofar as there is behavior we'd want to test
-     *    for correctness (and there is!), it's probably better expressed by
-     *    observing the effect non-relevance has on the values produced. A brief
-     *    attempt at an alternate expression of this test follows.
-     *
-     * 2. This exact form structure is not presently supported by the engine! It
-     *    fails because there is a check for same-name/same-parent nodes which
-     *    don't correspond to a repeat (range). Per review feedback, however,
-     *    it seems likely the intent was to test with repeats. An alternate
-     *    test follows with the same assertions against the fixture modified
-     *    to define a repeat.
-     *
-     * 3. Regardless of whether we intend to support forms of a similar shape,
-     *    it's also important to observe the semantics of the `relevant`
-     *    expression itself. The `position()` call is **rather likely** to be
-     *    evaluated against the context of the `<bind nodeset>` expression.
-     *    (It's also possible to interpret it as evaluated against the parent's
-     *    children, i.e. `/data/*`, but this seems much less likely to be the
-     *    case.) This wouldn't be surprising, it may even be exactly what's
-     *    expected. But the current engine behavior evaluates bind expressions
-     *    against the bound node itself, as the initial "context node" (in XPath
-     *    semantic terms)... as such, a `position()` call will currently always
-     *    return `1` (unless called against some other context established by
-     *    preceding expression steps).
-     */
-    it.fails('[is] are excluded from nodeset evaluation', async () => {
-      const scenario = await Scenario.init(
-        'Some form',
-        html(
-          head(
-            title('Some form'),
-            model(
-              mainInstance(
-                t(
-                  'data id="some-form"',
-                  // position() is one-based
-                  t('node', t('value', '1')), // non-relevant
-                  t('node', t('value', '2')), // non-relevant
-                  t('node', t('value', '3')), // relevant
-                  t('node', t('value', '4')), // relevant
-                  t('node', t('value', '5')) // relevant
-                )
-              ),
-              bind('/data/node').relevant('position() > 2'),
-              bind('/data/node/value').type('int')
-            )
-          ),
-          body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
-        )
-      );
-
-      // The XPathPathExprEval is used when evaluating the nodesets that the
-      // xpath functions declared in triggerable expressions need to operate
-      // upon. This assertion shows that non-relevant nodes are not included
-      // in the resulting nodesets
-      expect(
-        new XPathPathExprEval()
-          .eval(getRef('/data/node'), scenario.getEvaluationContext())
-          .getReferences()
-          .size()
-      ).toBe(3);
-
-      // The method XPathPathExpr.getRefValue is what ultimately is used by
-      // triggerable expressions to extract the values they need to operate
-      // upon. The following assertion shows how extrating values from
-      // non-relevant nodes returns `null` values instead of the actual values
-      // they're holding
-      expect(
-        XPathPathExpr.getRefValue(
-          scenario.getFormDef().getMainInstance(),
-          scenario.getEvaluationContext(),
-          scenario.expandSingle(getRef('/data/node[2]/value'))
-        )
-      ).toBe('');
-
-      // ... as opposed to the value that we can get by resolving the same
-      // reference with the main instance, which has the expected `2` value
-      expect(scenario.answerOf('/data/node[2]/value')).toEqualAnswer(intAnswer(2));
-    });
-
-    /**
-     * **PORTING NOTES**
-     *
-     * Alternate to the direct port above, incorporating the feedback that the
-     * test fixture was likely meant to be defined with a repeat. When
-     * JavaRosa's test is updated, this one can be updated to match it, and will
-     * presumably replace the test above.
-     *
-     * Fails on test of internals. **Another**, supplemental test follows which
-     * exercises non-relevant-exclusion semantics by asserting that the
-     * non-relevant values are blank in downstream `calculate`s.
-     */
-    it.fails('[is] are excluded from nodeset evaluation (alt: repeat)', async () => {
-      const scenario = await Scenario.init(
-        'Some form',
-        html(
-          head(
-            title('Some form'),
-            model(
-              mainInstance(
-                t(
-                  'data id="some-form"',
-                  // position() is one-based
-                  t('node', t('value', '1')), // non-relevant
-                  t('node', t('value', '2')), // non-relevant
-                  t('node', t('value', '3')), // relevant
-                  t('node', t('value', '4')), // relevant
-                  t('node', t('value', '5')) // relevant
-                )
-              ),
-              bind('/data/node').relevant('position() > 2'),
-              bind('/data/node/value').type('int')
-            )
-          ),
-          body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
-        )
-      );
-
-      // The XPathPathExprEval is used when evaluating the nodesets that the
-      // xpath functions declared in triggerable expressions need to operate
-      // upon. This assertion shows that non-relevant nodes are not included
-      // in the resulting nodesets
-      expect(
-        new XPathPathExprEval()
-          .eval(getRef('/data/node'), scenario.getEvaluationContext())
-          .getReferences()
-          .size()
-      ).toBe(3);
-
-      // The method XPathPathExpr.getRefValue is what ultimately is used by
-      // triggerable expressions to extract the values they need to operate
-      // upon. The following assertion shows how extrating values from
-      // non-relevant nodes returns `null` values instead of the actual values
-      // they're holding
-      expect(
-        XPathPathExpr.getRefValue(
-          scenario.getFormDef().getMainInstance(),
-          scenario.getEvaluationContext(),
-          scenario.expandSingle(getRef('/data/node[2]/value'))
-        )
-      ).toBe('');
-
-      // ... as opposed to the value that we can get by resolving the same
-      // reference with the main instance, which has the expected `2` value
-      expect(scenario.answerOf('/data/node[2]/value')).toEqualAnswer(intAnswer(2));
-    });
-
-    /**
-     * **PORTING NOTES** (supplemental: 1 of 3)
-     *
-     * - This test extends the fixture above by adding a `calculate` of the
-     *   affected nodes. This allows exercising non-relevant value exclusion
-     *   without asserting implementation details as in the original test as
-     *   ported from JavaRosa.
-     *
-     * - A previous iteration of this alternate test had a substantially
-     *   different form fixture shape, without many of the hallmarks of the
-     *   original test. This alternate was then updated to more closely align
-     *   with the intent of the original. Unfortunately that caused the test's
-     *   failure mode to diverge from details in the PORTING NOTES.
-     *
-     * - There are actually three failure modes **in this test, as it stands**:
-     *
-     *     1. A bug where `relevant` is applied after the nodes' initial value
-     *        is set, and fails to cause those nodes to be cleared when that
-     *        relevance state is finally computed.
-     *
-     *     2. A bug where `relevant` conditions which should affect each repeat
-     *        instance independently, also causes the repeat *range* to be
-     *        treated as non-relevant. This then cascades as inherited
-     *        non-relevance, effectively making all repeat instances
-     *        non-relevant if any of them are.
-     *
-     *     3. An apparent discrepancy between JavaRosa and Web Forms semantics
-     *        when `position()` is called without an argument, with the repeat
-     *        instance as its context. As I understand the
-     *        {@link https://getodk.github.io/xforms-spec/#fn:position | `position` spec},
-     *        JavaRosa's behavior is roughly consistent with the 1-arity
-     *        extension (e.g. as if the function had been called as
-     *        `position(current())`).
-     *
-     * - Given these three failure modes, two **additional** supplemental tests
-     *   are added below, eliminating consideration of (3) and then (2)
-     *   respectively (in that order to keep the least divergent fixtures
-     *   closest together). This test will remain intact as an exercise of all
-     *   three failure modes. This will allow us to fix the first two bugs
-     *   separately, and then address the discrepancy in (3) after we have a
-     *   chance to discuss whether it's expected behavior.
-     *
-     * - My instinct is that JavaRosa's behavior per (3) above **is expected**,
-     *   despite deviation from the apparent letter of the spec. This instinct
-     *   is largely based in tracking the behavior back to
-     *   {@link https://github.com/getodk/javarosa/blame/980a36b99680c4dccff3cb634f984ed9f93df800/src/org/javarosa/xpath/expr/XPathFuncExpr.java#L282-L286 | JavaRosa's first commit ("added trig functions" 🙃)}.
-     */
-    it.fails(
-      'is excluded from producing default values in an evaluation (supplemental to two previous tests)',
-      async () => {
-        const scenario = await Scenario.init(
-          'Some form',
-          html(
-            head(
-              title('Some form'),
-              model(
-                mainInstance(
-                  t(
-                    'data id="some-form"',
-                    // position() is one-based
-                    t('node', t('value', '1')), // non-relevant
-                    t('node', t('value', '2')), // non-relevant
-                    t('node', t('value', '3')), // relevant
-                    t('node', t('value', '4')), // relevant
-                    t('node', t('value', '5')), // relevant
-                    t('node-values')
-                  )
-                ),
-                bind('/data/node').relevant('position() > 2'),
-                bind('/data/node/value').type('int'),
-                bind('/data/node-values').calculate('concat(/data/node/value)')
-              )
-            ),
-            body(group('/data/node', repeat('/data/node', input('/data/node/value'))))
-          )
-        );
-
-        expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
-      }
-    );
-
-    /**
-     * **PORTING NOTES** (supplemental: 2 of 3; see commit history for
-     * additional context and commentary)
-     */
-    it('is excluded from producing default values in an evaluation (supplemental to two previous tests)', async () => {
+    it('is excluded from producing default values in an evaluation', async () => {
       const scenario = await Scenario.init(
         'Some form',
         html(
@@ -525,10 +286,6 @@ describe('Relevance - TriggerableDagTest.java', () => {
       expect(scenario.answerOf('/data/node-values')).toEqualAnswer(stringAnswer('345'));
     });
 
-    /**
-     * **PORTING NOTES** (supplemental: 3 of 3; see commit history for
-     * additional context and commentary)
-     */
     it('excludes default values on nodes which are non-relevant on init', async () => {
       const scenario = await Scenario.init(
         'Some form',
@@ -583,9 +340,6 @@ describe('Relevance - TriggerableDagTest.java', () => {
   describe('non-relevant node values', () => {
     /**
      * **PORTING NOTES**
-     *
-     * - Rephrase? Unclear how best to adapt this particular singular/plural,
-     *   but "null" should probably be "blank".
      *
      * - There is currently a recomputation bug, causing the second-to-last
      *   assertion to fail.
@@ -704,7 +458,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
     { skipSurprisingNonRelevantValueChecks: false },
     { skipSurprisingNonRelevantValueChecks: true },
   ])(
-    'verify[ing] relation[ship] between calculate expressions and relevancy conditions (skip surprising non-relevant value checks: $skipSurprisingNonRelevantValueChecks)',
+    'verify relation between calculate expressions and relevancy conditions (skip surprising non-relevant value checks: $skipSurprisingNonRelevantValueChecks)',
     ({ skipSurprisingNonRelevantValueChecks }) => {
       let testFn: typeof it | typeof it.fails;
 
@@ -784,7 +538,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
    * particularly thorny in terms of essential complexity, which could make for
    * a good organizational principle for these sorts of tests.
    */
-  describe('when repeat and top-level node have [the] same relevance expression, and [the] expression evaluates to false', () => {
+  describe('when repeat and top-level node have the same relevance expression, and the expression evaluates to false', () => {
     /**
      * **PORTING NOTES**
      *
@@ -801,7 +555,7 @@ describe('Relevance - TriggerableDagTest.java', () => {
      * propagated as expected when a relevance expression is shared between a
      * repeat and non-repeat. See https://github.com/getodk/javarosa/issues/603.
      */
-    it('[omits the repeat range?] repeat prompt is skipped', async () => {
+    it('omits the repeat range', async () => {
       const scenario = await Scenario.init(
         'Repeat relevance same as other',
         html(
@@ -839,86 +593,39 @@ describe('Relevance - TriggerableDagTest.java', () => {
 });
 
 describe('FormEntryModelTest.java', () => {
-  /**
-   * **PORTING NOTES**
-   *
-   * Test body is copied verbatim and commented out. This seems to be more of a
-   * unit test. It's likely at least **conceptually redundant** to other tests exercising inheritance of `relevant` state. But to the extent there might be something novel here, an alternate test follows which exercises the same form logic and relevance assertions using {@link Scenario}-oriented APIs.
-   */
-  describe('[~~]`isIndexRelevant`[~~]', () => {
-    it.skip('[inherits] respects relevance of outermost group', async () => {
-      // Scenario scenario = Scenario.init("Nested relevance", html(
-      // 		head(
-      // 				title("Nested relevance"),
-      // 				model(
-      // 						mainInstance(t("data id=\"nested_relevance\"",
-      // 								t("outer",
-      // 										t("inner",
-      // 												t("q1"))),
-      // 								t("innerYesNo", "no"),
-      // 								t("outerYesNo", "no")
-      // 								)),
-      // 						bind("/data/outer").relevant("/data/outerYesNo = 'yes'"),
-      // 						bind("/data/outer/inner").relevant("/data/innerYesNo = 'yes'")
-      // 				)),
-      // 		body(
-      // 				group("/data/outer",
-      // 						group("/data/outer/inner",
-      // 								input("/data/outer/inner/q1")
-      // 						)
-      // 				),
-      // 				input("/data/outerYesNo"),
-      // 				input("/data/innerYesNo")
-      // 		)));
-      // FormDef formDef = scenario.getFormDef();
-      // FormEntryModel formEntryModel = new FormEntryModel(formDef);
-      // FormIndex q1Index = scenario.indexOf("/data/outer/inner/q1");
-      // assertThat(formEntryModel.isIndexRelevant(q1Index), is(false));
-      // scenario.answer("/data/innerYesNo", "yes");
-      // assertThat(formEntryModel.isIndexRelevant(q1Index), is(false));
-      // scenario.answer("/data/outerYesNo", "yes");
-      // assertThat(formEntryModel.isIndexRelevant(q1Index), is(true));
-    });
+  it('inherits relevance of the outermost group', async () => {
+    const scenario = await Scenario.init(
+      'Nested relevance',
+      html(
+        head(
+          title('Nested relevance'),
+          model(
+            mainInstance(
+              t(
+                'data id="nested_relevance"',
+                t('outer', t('inner', t('q1'))),
 
-    it('inherits relevance of the outermost group (alternate)', async () => {
-      const scenario = await Scenario.init(
-        'Nested relevance',
-        html(
-          head(
-            title('Nested relevance'),
-            model(
-              mainInstance(
-                t(
-                  'data id="nested_relevance"',
-                  t('outer', t('inner', t('q1'))),
-
-                  t('innerYesNo', 'no'),
-                  t('outerYesNo', 'no')
-                )
-              ),
-              bind('/data/outer').relevant("/data/outerYesNo = 'yes'"),
-              bind('/data/outer/inner').relevant("/data/innerYesNo = 'yes'")
-            )
-          ),
-          body(
-            group('/data/outer', group('/data/outer/inner', input('/data/outer/inner/q1'))),
-            input('/data/outerYesNo'),
-            input('/data/innerYesNo')
+                t('innerYesNo', 'no'),
+                t('outerYesNo', 'no')
+              )
+            ),
+            bind('/data/outer').relevant("/data/outerYesNo = 'yes'"),
+            bind('/data/outer/inner').relevant("/data/innerYesNo = 'yes'")
           )
+        ),
+        body(
+          group('/data/outer', group('/data/outer/inner', input('/data/outer/inner/q1'))),
+          input('/data/outerYesNo'),
+          input('/data/innerYesNo')
         )
-      );
+      )
+    );
 
-      const q1Node = scenario.getInstanceNode('/data/outer/inner/q1');
-
-      expect(q1Node).toBeNonRelevant();
-
-      scenario.answer('/data/innerYesNo', 'yes');
-
-      expect(q1Node).toBeNonRelevant();
-
-      scenario.answer('/data/outerYesNo', 'yes');
-
-      expect(q1Node).toBeRelevant();
-    });
+    const q1Node = scenario.getInstanceNode('/data/outer/inner/q1');
+    expect(q1Node).toBeNonRelevant();
+    scenario.answer('/data/innerYesNo', 'yes');
+    expect(q1Node).toBeNonRelevant();
+    scenario.answer('/data/outerYesNo', 'yes');
+    expect(q1Node).toBeRelevant();
   });
 });
