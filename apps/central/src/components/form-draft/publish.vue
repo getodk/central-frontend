@@ -155,7 +155,9 @@ export default {
             : null
         ),
         headers,
-        fulfillProblem: (problem) => problem.code === 409.6
+        fulfillProblem: (problem) => problem.code === 409.6,
+        problemToAlert: ({ code }) =>
+          (code === 409.25 ? this.$t('problem.409_25') : null)
       })
         .then(({ data }) => {
           if (!isProblem(data)) {
@@ -196,7 +198,8 @@ export default {
     ],
     "newProperties": "Publishing this draft will create {count} property. | Publishing this draft will create {count} properties.",
     "problem": {
-      "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition."
+      "409_6": "The version name of this Draft conflicts with a past version of this Form or a deleted Form. Please use the field below to change it to something new or upload a new Form definition.",
+      "409_25": "The draft is being published by another user."
     },
     "field": {
       "note": "Version notes"
