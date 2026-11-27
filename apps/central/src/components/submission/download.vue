@@ -265,21 +265,37 @@ export default {
       form.reset();
     },
     checkForProblem() {
-      const doc = this.$refs.iframe.contentWindow.document;
+      let doc;
+      try {
+        doc = this.$refs.iframe.contentWindow.document;
+      } catch (error) {
+        this.logger.error('[SubmissionDownload] Could not access iframe document');
+        this.logger.error(error);
+        this.redAlert.show(this.$t('alert.somethingWentWrong'));
+        return true;
+      }
+
       // If Backend returns a Problem, the iframe changes pages. However, if the
       // form submission is successful, it seems that the iframe does not change
       // pages, and the form remains on the page.
       if (doc.querySelector('form') != null || doc.body == null) return false;
+
       let problem;
+      const { textContent } = doc.body;
       try {
         // Note that the Problem may be wrapped in another element, for example,
         // a <pre> element.
-        problem = JSON.parse(doc.body.textContent);
-      } catch (e) {
-        this.logger.log(doc.body.textContent);
-        this.redAlert.show(this.$t('alert.parseError'));
+        problem = JSON.parse(textContent);
+      } catch (error) {}
+      if (isProblem(problem)) {
+        this.redAlert.show(problem.message);
+      } else {
+        this.logger.error('[SubmissionDownload]', problem == null
+          ? 'Response is not valid JSON'
+          : 'Response is not a Backend Problem');
+        this.logger.log(textContent);
+        this.redAlert.show(this.$t('alert.somethingWentWrong'));
       }
-      if (isProblem(problem)) this.redAlert.show(problem.message);
       return true;
     },
     decrypt(action) {
@@ -417,7 +433,8 @@ $actions-padding-left: $label-icon-max-width + $margin-right-icon;
     "alert": {
       "unavailable": "The data download is not yet available. Please try again in a moment.",
       "submit": "Data download should begin soon. Once it begins, you can close this message. If it hasn’t started in 20 seconds, please try again.",
-      "parseError": "Something went wrong while requesting your data."
+      "parseError": "Something went wrong while requesting your data.",
+      "somethingWentWrong": "@:alert.parseError"
     }
   }
 }
