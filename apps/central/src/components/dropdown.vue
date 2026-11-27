@@ -1,5 +1,6 @@
 <template>
-  <component :is="tag" ref="container" class="dropdown" :class="{ open: isOpen }">
+  <component :is="tag" ref="container" class="dropdown" :class="{ open: isOpen }"
+    @focusout="handleFocusOut">
     <slot name="toggle" :toggle="toggle" :is-open="isOpen" :attrs="triggerAttrs"></slot>
     <ul ref="menu" class="dropdown-menu" :style="menuStyle" :aria-labelledby="triggerId">
       <slot name="menu"></slot>
@@ -103,6 +104,15 @@ const handleEscape = (event) => {
   if (isOpen.value && event.key === 'Escape') {
     hide();
   }
+};
+
+const handleFocusOut = (event) => {
+  if (!isOpen.value) return;
+  // relatedTarget is the element receiving focus.
+  // If it's still within the container, don't close.
+  const newFocusTarget = event.relatedTarget;
+  if (newFocusTarget && container.value?.contains(newFocusTarget)) return;
+  hide();
 };
 
 useEventListener(document, 'click', handleClickOutside, true);

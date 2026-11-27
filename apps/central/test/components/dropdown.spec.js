@@ -44,6 +44,11 @@ describe('Dropdown', () => {
       }],
       ['on Escape key', async (component) => {
         await component.trigger('keydown', { key: 'Escape' });
+      }],
+      ['when focus moves outside (e.g., Tab key)', async (component) => {
+        const toggle = component.find('.dropdown-toggle');
+        const outside = component.find('#outside');
+        await toggle.trigger('focusout', { relatedTarget: outside.element });
       }]
     ];
 
