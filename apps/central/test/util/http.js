@@ -278,6 +278,7 @@ import { clone, identity, last, pick } from 'ramda';
 
 import App from '../../src/components/app.vue';
 
+import { loadAsync, loadingAnyAsync } from '../../src/util/load-async';
 import { noop } from '../../src/util/util';
 import { routeProps } from '../../src/util/router';
 
@@ -285,7 +286,6 @@ import createTestContainer from './container';
 import requestDataByComponent from './http/data';
 import testData from '../data';
 import * as commonTests from './http/common';
-import { loadAsyncCache } from './load-async';
 import { mockAxiosError, mockResponse } from './axios';
 import { mockRouter, setInstallLocation, testRouter } from './router';
 import { mount as lifecycleMount, withSetup } from './lifecycle';
@@ -295,20 +295,13 @@ import { wait, waitUntil } from './util';
 const routeResolver = createTestContainer({ router: testRouter() }).router;
 const resolveRoute = (location) => routeResolver.resolve(location);
 // Returns the components associated with a route. If the route is lazy-loaded,
-// any async component will be unwrapped from AsyncRoute.
+// any async component will be unwrapped from AsyncRoute. If a component is
+// async, only its name will be returned, not the full component.
 const routeComponents = (route) => route.matched.map(routeRecord => {
   const { asyncRoute } = routeRecord.meta;
-  if (asyncRoute == null) return routeRecord.components.default;
-
-  const m = loadAsyncCache.get(asyncRoute.componentName);
-  if (m == null) {
-    // eslint-disable-next-line no-console
-    console.error(`Component ${asyncRoute.componentName} was not found in the loadAsync() cache.`);
-    // eslint-disable-next-line no-console
-    console.error('The loadAsync() cache contains', loadAsyncCache.size, 'entries.');
-    throw new Error('component not found in loadAsync() cache');
-  }
-  return m.default;
+  return asyncRoute == null
+    ? routeRecord.components.default
+    : { name: asyncRoute.componentName };
 });
 
 class MockHttp {
@@ -384,8 +377,11 @@ class MockHttp {
         ? containerOption
         : createTestContainer(containerOption));
 
-    const mount = () => {
-      const wrapper = lifecycleMount(component, { ...options, container });
+    const mount = async () => {
+      const loadedComponent = typeof component === 'string'
+        ? (await loadAsync(component)()).default
+        : component;
+      const wrapper = lifecycleMount(loadedComponent, { ...options, container });
 
       if (throwIfEmit != null) {
         const emitted = wrapper.emitted();
@@ -643,24 +639,24 @@ class MockHttp {
       : noop;
 
     try {
-      const routeBefore = router != null ? router.currentRoute.value : null;
       if (this._location != null) await router.push(this._location);
       if (this._mount != null) {
-        this._component = this._mount();
+        this._component = await this._mount();
         // Mounting may have triggered the initial navigation.
         if (router != null) await router.isReady();
       }
+      // If there was a navigation, then we need to wait for any async
+      // components associated with the route to load.
+      await waitUntil(() => !loadingAnyAsync());
 
       if (this._request != null) {
-        // If there has been a navigation, then wait for any async components
-        // associated with the route to load.
-        if (router != null && router.currentRoute.value !== routeBefore)
-          await wait();
-
         this._checkStateBeforeRequest();
         await this._request(this._component);
       }
     } finally {
+      // Wait for any router navigation to finish.
+      if (router != null) await wait();
+      await waitUntil(() => !loadingAnyAsync());
       // Wait for any responses to be processed.
       await wait();
       if (pollWork != null) await waitUntil(() => pollWork(this._component));
@@ -951,7 +947,11 @@ const loadBottomComponent = (location, mountOptions, respondForOptions) => {
   const throwIfEmit = `${bottomComponent.name} emitted an event, but it is not expected to do so. In this case, root cannot be specified as false.`;
 
   return mockHttp()
-    .mount(bottomComponent, fullMountOptions, throwIfEmit)
+    .mount(
+      bottomComponent.render != null ? bottomComponent : bottomComponent.name,
+      fullMountOptions,
+      throwIfEmit
+    )
     .modify(series => (respondForOptions !== false
       ? series.respondForComponent(bottomComponent.name, respondForOptions)
       : series));
