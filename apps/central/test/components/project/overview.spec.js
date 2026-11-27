@@ -1,3 +1,5 @@
+import sinon from 'sinon';
+
 import FormList from '../../../src/components/form/list.vue';
 import FormRow from '../../../src/components/form/row.vue';
 import FormTrashList from '../../../src/components/form/trash-list.vue';
@@ -109,6 +111,24 @@ describe('ProjectOverview', () => {
       testData.extendedForms.createPast(1, { name: 'Same Name', xmlFormId: 'foo' });
       const app = await load('/projects/1', {}, {
         deletedForms: () => [{ name: 'Same Name', xmlFormId: 'bar', deletedAt: new Date().toISOString() }]
+      });
+      const formList = app.getComponent(FormList);
+      formList.find('.duplicate-form-id').text().should.equal('(foo)');
+      const trashList = app.getComponent(FormTrashList);
+      trashList.find('.duplicate-form-id').text().should.equal('(bar)');
+    });
+
+    it('compares names in the selected locale, not the browser default locale', async () => {
+      // In Turkish, "I" lowercases to a dotless "ı". Simulate a browser whose
+      // default locale is Turkish while English is selected in Central.
+      const { toLocaleLowerCase } = String.prototype;
+      sinon.replace(String.prototype, 'toLocaleLowerCase', function lower(locale) {
+        return toLocaleLowerCase.call(this, locale ?? 'tr');
+      });
+      mockLogin();
+      testData.extendedForms.createPast(1, { name: 'Indicators', xmlFormId: 'foo' });
+      const app = await load('/projects/1', {}, {
+        deletedForms: () => [{ name: 'indicators', xmlFormId: 'bar', deletedAt: new Date().toISOString() }]
       });
       const formList = app.getComponent(FormList);
       formList.find('.duplicate-form-id').text().should.equal('(foo)');
