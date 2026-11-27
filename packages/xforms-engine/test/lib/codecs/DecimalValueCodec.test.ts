@@ -22,7 +22,7 @@ describe('DecimalValueCodec', () => {
     });
   });
 
-  describe('dencode', () => {
+  describe('decode', () => {
     it.each([
       { input: '1', expected: 1 },
       { input: '1.54', expected: 1.54 },

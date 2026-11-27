@@ -1,6 +1,7 @@
 import { beforeEach, describe, it } from 'vitest';
 import type { XFormsTestContext } from '../helpers.ts';
 import { createXFormsTestContext, createXFormsTextContentTestContext } from '../helpers.ts';
+import { Temporal } from 'temporal-polyfill';
 
 describe('date comparison', () => {
   let testContext: XFormsTestContext;
@@ -10,17 +11,7 @@ describe('date comparison', () => {
   });
 
   const relativeDateAsString = (offset: number) => {
-    const d = new Date();
-
-    d.setDate(d.getDate() + offset);
-
-    return (
-      d.getFullYear() +
-      '-' +
-      (d.getMonth() + 1).toString().padStart(2, '0') +
-      '-' +
-      d.getDate().toString().padStart(2, '0')
-    );
+    return Temporal.Now.plainDateISO(TZ).add({ days: offset }).toString();
   };
 
   const yesterdayExpression = JSON.stringify(relativeDateAsString(-1));

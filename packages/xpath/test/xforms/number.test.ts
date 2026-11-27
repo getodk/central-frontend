@@ -68,11 +68,11 @@ describe('#number()', () => {
 
   describe('called on a date string', () => {
     [
-      { expression: 'number("1970-01-01")', expected: 0.29 },
-      { expression: 'number("1970-01-02")', expected: 1.29 },
-      { expression: 'number("1969-12-31")', expected: -0.71 },
-      { expression: 'number("2008-09-05")', expected: 14127.29 },
-      { expression: 'number("1941-12-07")', expected: -10251.71 },
+      { expression: 'number("1970-01-01")', expected: 0 },
+      { expression: 'number("1970-01-02")', expected: 1 },
+      { expression: 'number("1969-12-31")', expected: -1 },
+      { expression: 'number("2008-09-05")', expected: 14127 },
+      { expression: 'number("1941-12-07")', expected: -10252 },
     ].forEach(({ expression, expected }) => {
       it(expression + ' should be ' + expected + ' days since the epoch', () => {
         testContext.assertNumberRounded(expression, expected, 100);

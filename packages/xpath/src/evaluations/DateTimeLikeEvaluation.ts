@@ -22,10 +22,6 @@ export class DateTimeLikeEvaluation<T extends XPathNode> extends ValueEvaluation
   protected readonly numberValue: number;
   protected readonly stringValue: string;
 
-  protected readonly milliseconds: number;
-  protected readonly dateString: string;
-  protected readonly dateTimeString: string;
-
   constructor(
     readonly context: LocationPathEvaluation<T>,
     protected dateTime: Temporal.ZonedDateTime | null,
@@ -39,9 +35,6 @@ export class DateTimeLikeEvaluation<T extends XPathNode> extends ValueEvaluation
       this.value = NaN;
       this.booleanValue = booleanValue ?? false;
       this.numberValue = numberValue ?? NaN;
-      this.milliseconds = NaN;
-      this.dateString = INVALID_DATE_TIME_STRING;
-      this.dateTimeString = INVALID_DATE_TIME_STRING;
       this.stringValue = stringValue ?? INVALID_DATE_TIME_STRING;
 
       return;
@@ -56,9 +49,6 @@ export class DateTimeLikeEvaluation<T extends XPathNode> extends ValueEvaluation
 
     const dateTimeString = localDateTimeOrDateString(dateTime);
 
-    this.milliseconds = epochMilliseconds;
-    this.dateTimeString = dateTimeString;
     this.stringValue = stringValue ?? dateTimeString;
-    this.dateString = dateTimeString.replace(/T.*$/, '');
   }
 }

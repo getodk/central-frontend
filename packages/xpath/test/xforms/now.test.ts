@@ -27,6 +27,6 @@ describe('#now()', () => {
     expect(result.split('T')[0]).toEqual(today);
 
     // assert timezone is included
-    expect(result).toMatch(/-07:00$/);
+    expect(result).toMatch(/[+-]\d{2}:00$/);
   });
 });

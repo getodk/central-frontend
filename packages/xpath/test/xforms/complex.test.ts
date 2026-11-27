@@ -260,48 +260,41 @@ describe('some complex examples', () => {
     { expression: "'some-value' =../some-path", expected: false },
     { expression: "'some-value' = ../some-path", expected: false },
   ].forEach(({ expression, expected, match, predicate }) => {
-    it(
-      'should convert "' +
-        expression +
-        '" to match "' +
-        String(expected ?? match ?? predicate) +
-        '"',
-      () => {
-        if (predicate != null) {
-          const { singleNodeValue } = testContext.evaluate(
-            expression,
-            null,
-            XPathResult.FIRST_ORDERED_NODE_TYPE
-          );
+    it(`should convert "${expression}" to match "${String(expected ?? match ?? predicate)}"`, () => {
+      if (predicate != null) {
+        const { singleNodeValue } = testContext.evaluate(
+          expression,
+          null,
+          XPathResult.FIRST_ORDERED_NODE_TYPE
+        );
 
-          expect(predicate(singleNodeValue)).toEqual(true);
+        expect(predicate(singleNodeValue)).toEqual(true);
 
-          return;
-        }
-
-        if (match != null) {
-          testContext.assertStringMatches(expression, match);
-
-          return;
-        }
-
-        switch (typeof expected) {
-          case 'boolean':
-            testContext.assertBooleanValue(expression, expected);
-            break;
-
-          case 'number':
-            testContext.assertNumberValue(expression, expected);
-            break;
-
-          case 'string':
-            testContext.assertStringValue(expression, expected);
-            break;
-
-          default:
-            throw new UnreachableError(expected);
-        }
+        return;
       }
-    );
+
+      if (match != null) {
+        testContext.assertStringMatches(expression, match);
+
+        return;
+      }
+
+      switch (typeof expected) {
+        case 'boolean':
+          testContext.assertBooleanValue(expression, expected);
+          break;
+
+        case 'number':
+          testContext.assertNumberValue(expression, expected);
+          break;
+
+        case 'string':
+          testContext.assertStringValue(expression, expected);
+          break;
+
+        default:
+          throw new UnreachableError(expected);
+      }
+    });
   });
 });

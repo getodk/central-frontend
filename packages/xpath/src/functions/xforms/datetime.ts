@@ -1,4 +1,4 @@
-import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
+import { DAY_MILLISECONDS, ISO_DATE_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
 import { Temporal } from 'temporal-polyfill';
 import type { XPathNode } from '../../adapter/interface/XPathNode.ts';
 import { EvaluationContext } from '../../context/EvaluationContext.ts';
@@ -8,9 +8,10 @@ import { StringEvaluation } from '../../evaluations/StringEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
 import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { StringFunction } from '../../evaluator/functions/StringFunction.ts';
-import { dateTimeFromNumber, dateTimeFromString } from '../../lib/datetime/coercion.ts';
-import { now } from '../../lib/datetime/functions.ts';
+import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
+import { daysSinceEpoch, now } from '../../lib/datetime/functions.ts';
 import { isValidTimeString } from '../../lib/datetime/predicates.ts';
+import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
 
 export const today = new FunctionImplementation('today', [], (context) => {
   const todayDateTime = now(context.timeZone).with({
@@ -22,7 +23,9 @@ export const today = new FunctionImplementation('today', [], (context) => {
     nanosecond: 0,
   });
 
-  return new DateTimeLikeEvaluation(context, todayDateTime);
+  return new DateLikeEvaluation(context, todayDateTime.toPlainDate(), {
+    numberValue: todayDateTime.epochMilliseconds / DAY_MILLISECONDS,
+  });
 });
 
 export const xfNow = new FunctionImplementation('now', [], (context) => {
@@ -216,7 +219,7 @@ export const formatDateTime = new StringFunction(
 const evaluateDateTime = <T extends XPathNode>(
   context: EvaluationContext<T>,
   evaluation: Evaluation<T>
-): Temporal.ZonedDateTime | null => {
+): Temporal.PlainDate | Temporal.ZonedDateTime | null => {
   const { timeZone } = context;
 
   switch (evaluation.type) {
@@ -226,9 +229,7 @@ const evaluateDateTime = <T extends XPathNode>(
       if (Number.isNaN(days)) {
         return null;
       }
-
-      const milliseconds = days * DAY_MILLISECONDS;
-      return dateTimeFromNumber(timeZone, milliseconds);
+      return Temporal.PlainDate.from('1970-01-01').add({ days: Math.floor(days) });
     }
 
     case 'BOOLEAN': {
@@ -239,6 +240,9 @@ const evaluateDateTime = <T extends XPathNode>(
 
     default: {
       const stringValue = evaluation.toString();
+      if (ISO_DATE_LIKE_PATTERN.exec(stringValue)) {
+        return Temporal.PlainDate.from(stringValue);
+      }
       return dateTimeFromString(timeZone, stringValue);
     }
   }
@@ -294,6 +298,9 @@ export const date = new FunctionImplementation(
 
     const dateTime = evaluateDateTime(context, results);
 
+    if (dateTime instanceof Temporal.PlainDate) {
+      return new DateLikeEvaluation(context, dateTime);
+    }
     return new DateTimeLikeEvaluation(context, dateTime);
   }
 );
@@ -309,6 +316,9 @@ export const decimalDateTime = new NumberFunction(
       return NaN;
     }
 
+    if (dateTime instanceof Temporal.PlainDate) {
+      return daysSinceEpoch(dateTime);
+    }
     return dateTime.epochMilliseconds / DAY_MILLISECONDS;
   }
 );

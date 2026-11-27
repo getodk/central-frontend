@@ -13,6 +13,10 @@ import { assert, beforeEach, describe, expect, it } from 'vitest';
 import { InputNodeAnswer } from '../scenario/answer/InputNodeAnswer.ts';
 import { ModelValueNodeAnswer } from '../scenario/answer/ModelValueNodeAnswer.ts';
 import { AnswerResult, Scenario } from '../scenario/jr/Scenario.ts';
+import { stringAnswer } from '../scenario/answer/ExpectedStringAnswer.ts';
+import { Temporal } from 'temporal-polyfill';
+import { localDateTimeOrDateString } from '@getodk/xpath/lib/datetime/functions.ts';
+import { intAnswer } from '../scenario/answer/ExpectedIntAnswer.ts';
 
 describe('Datetime bind type', () => {
   const formTitle = 'Datetime bind types';
@@ -132,6 +136,103 @@ describe('Datetime bind type', () => {
 
       expect(answer.value).toBeNull();
       expect(answer.stringValue).toBe('');
+    });
+  });
+
+  describe('date arithmetic', () => {
+    describe('with integer', () => {
+      const initScenario = async (type: 'date' | 'dateTime', operator: '-' | '+') => {
+        return Scenario.init(
+          'Date arithmetic',
+          html(
+            head(
+              title('Date arithmetic'),
+              model(
+                mainInstance(t('data id="datetime"', t('date'), t('output'))),
+                bind('/data/date').type(type),
+                bind('/data/output').type(type).calculate(`/data/date ${operator} 1`)
+              )
+            ),
+            body(input('/data/date'), input('/data/output'))
+          )
+        );
+      };
+
+      describe('dateTime', () => {
+        it('+1', async () => {
+          const arithmeticScenario = await initScenario('dateTime', '+');
+          arithmeticScenario.answer('/data/date', '2026-04-22T14:30:00Z');
+          const expected = localDateTimeOrDateString(
+            Temporal.Instant.from('2026-04-23T14:30:00Z').toZonedDateTimeISO(
+              Temporal.Now.timeZoneId()
+            )
+          );
+          expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(expected));
+        });
+
+        it('-1', async () => {
+          const arithmeticScenario = await initScenario('dateTime', '-');
+          arithmeticScenario.answer('/data/date', '2026-04-22T14:30:00Z');
+          const expected = localDateTimeOrDateString(
+            Temporal.Instant.from('2026-04-21T14:30:00Z').toZonedDateTimeISO(
+              Temporal.Now.timeZoneId()
+            )
+          );
+          expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(stringAnswer(expected));
+        });
+      });
+
+      describe('date', () => {
+        it('+1', async () => {
+          const arithmeticScenario = await initScenario('date', '+');
+          arithmeticScenario.answer('/data/date', '2026-04-22');
+          expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(
+            stringAnswer('2026-04-23')
+          );
+        });
+
+        it('-1', async () => {
+          const arithmeticScenario = await initScenario('date', '-');
+          arithmeticScenario.answer('/data/date', '2026-04-22');
+          expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(
+            stringAnswer('2026-04-21')
+          );
+        });
+      });
+    });
+
+    describe('between two dates', () => {
+      const initScenario = async (type: 'date' | 'dateTime') => {
+        return Scenario.init(
+          'Date arithmetic',
+          html(
+            head(
+              title('Date arithmetic'),
+              model(
+                mainInstance(t('data id="datetime"', t('date1'), t('date2'), t('output'))),
+                bind('/data/date1').type(type),
+                bind('/data/date2').type(type),
+                bind('/data/output').type('number').calculate(`/data/date1 - /data/date2`)
+              )
+            ),
+            body(input('/data/date1'), input('/data/date2'), input('/data/output'))
+          )
+        );
+      };
+
+      it('dateTime - dateTime', async () => {
+        const arithmeticScenario = await initScenario('dateTime');
+        arithmeticScenario.answer('/data/date1', '2026-04-22T14:30:00Z');
+        arithmeticScenario.answer('/data/date2', '2026-04-16T14:30:00Z');
+        expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(intAnswer(6));
+      });
+
+      it('date - date', async () => {
+        const arithmeticScenario = await initScenario('date');
+        arithmeticScenario.answer('/data/date1', '2026-04-22');
+        arithmeticScenario.answer('/data/date2', '2026-04-28');
+        expect(arithmeticScenario.answerOf('/data/output')).toEqualAnswer(intAnswer(-6));
+      });
     });
   });
 

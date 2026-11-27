@@ -12,20 +12,32 @@ export type DatetimeInputValue =
   | string
   | null;
 
+const EPOCH = Temporal.PlainDate.from('1970-01-01');
+
 /**
  * Parses a string in the format 'YYYY-MM-DD', 'YYYY-MM-DDTHH:MM:SS', or an ISO datetime with a timezone offset
- * (e.g. the output of now()) into a Temporal.PlainDate. Only the date portion of the input is used — the time
- * and offset are taken in the browser's local time and ignored.
+ * (e.g. the output of now()), or a number into a Temporal.PlainDate. Only the date portion of the input is used —
+ * the time and offset are taken in the browser's local time and ignored.
  *
  * @param value - The string to parse.
  * @returns A {@link DatetimeRuntimeValue}
  */
 const parseString = (value: string): DatetimeRuntimeValue => {
-  if (
-    value == null ||
-    typeof value !== 'string' ||
-    !ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)
-  ) {
+  if (value == null || typeof value !== 'string') {
+    return null;
+  }
+
+  value = value.trim();
+  if (value.length === 0) {
+    return null;
+  }
+
+  const num = Number(value);
+  if (Number.isFinite(num)) {
+    return EPOCH.add({ days: Math.floor(num) });
+  }
+
+  if (!ISO_DATE_OR_DATE_TIME_LIKE_PATTERN.test(value)) {
     return null;
   }
 

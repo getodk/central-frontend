@@ -1,5 +1,7 @@
 import { Temporal } from 'temporal-polyfill';
 
+const EPOCH = Temporal.PlainDate.from('1970-01-01');
+
 export const currentLocalDateTimeString = (timeZone: Temporal.TimeZoneLike): string => {
   return localDateTimeString(now(timeZone));
 };
@@ -22,3 +24,7 @@ export const localDateTimeOrDateString = (dateTime: Temporal.ZonedDateTime): str
 
 export const now = (timeZone: Temporal.TimeZoneLike): Temporal.ZonedDateTime =>
   Temporal.Now.zonedDateTimeISO(timeZone);
+
+export const daysSinceEpoch = (date: Temporal.PlainDate): number => {
+  return date.since(EPOCH, { largestUnit: 'days' }).days;
+};

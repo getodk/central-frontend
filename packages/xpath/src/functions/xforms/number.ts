@@ -1,4 +1,4 @@
-import { DAY_MILLISECONDS } from '@getodk/common/constants/datetime.ts';
+import { DAY_MILLISECONDS, ISO_DATE_LIKE_PATTERN } from '@getodk/common/constants/datetime.ts';
 import { DateTimeLikeEvaluation } from '../../evaluations/DateTimeLikeEvaluation.ts';
 import { NumberEvaluation } from '../../evaluations/NumberEvaluation.ts';
 import { FunctionImplementation } from '../../evaluator/functions/FunctionImplementation.ts';
@@ -6,6 +6,9 @@ import { NumberFunction } from '../../evaluator/functions/NumberFunction.ts';
 import { dateTimeFromString } from '../../lib/datetime/coercion.ts';
 import { XFormsXPathEvaluator } from '../../xforms/XFormsXPathEvaluator.ts';
 import { math2Alias, mathAlias, mathNAlias } from '../_shared/number.ts';
+import { Temporal } from 'temporal-polyfill';
+import { DateLikeEvaluation } from '../../evaluations/DateLikeEvaluation.ts';
+import { daysSinceEpoch } from '../../lib/datetime/functions.ts';
 
 export const abs = mathAlias('abs');
 export const acos = mathAlias('acos');
@@ -60,23 +63,35 @@ export const number = new FunctionImplementation(
     const { type } = results;
 
     if (type === 'NUMBER') {
-      return results;
+      return new NumberEvaluation(context, numberValue);
     }
 
     if (type === 'NODE' || type === 'STRING') {
       const stringValue = results.toString();
-      let dateTime;
+      if (ISO_DATE_LIKE_PATTERN.test(stringValue)) {
+        try {
+          const date = Temporal.PlainDate.from(stringValue);
+          return new DateLikeEvaluation(context, date, {
+            booleanValue: true,
+            stringValue: String(daysSinceEpoch(date)),
+          });
+        } catch {
+          // fall through
+        }
+      }
+
       try {
-        dateTime = dateTimeFromString(context.timeZone, stringValue);
+        const dateTime = dateTimeFromString(context.timeZone, stringValue);
+        if (dateTime != null) {
+          return new DateTimeLikeEvaluation(context, dateTime, {
+            booleanValue: true,
+            stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
+          });
+        }
       } catch {
         // not a valid date - fall through
       }
-      if (dateTime != null) {
-        return new DateTimeLikeEvaluation(context, dateTime, {
-          booleanValue: true,
-          stringValue: String(Math.floor(dateTime.epochMilliseconds / DAY_MILLISECONDS)),
-        });
-      }
+
       if (stringValue.includes(',')) {
         return new NumberEvaluation(context, parseCommaDecimal(stringValue));
       }
