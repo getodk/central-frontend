@@ -327,7 +327,7 @@ const geoJSONExternalSecondaryInstanceDefinition = (
   instanceId: string,
   featureCollection: FeatureCollection
 ): SecondaryInstanceDefinition => {
-  return defineSecondaryInstance(instanceId, rootChildOption(featureCollection));
+  return defineSecondaryInstance(instanceId, rootChildOption(featureCollection), 'geojson');
 };
 
 export class GeoJSONExternalSecondaryInstanceSource extends ExternalSecondaryInstanceSource<'geojson'> {
