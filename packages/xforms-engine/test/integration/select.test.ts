@@ -579,6 +579,26 @@ describe('SelectCachingTest.java', () => {
 });
 
 describe('SelectChoiceTest.java', () => {
+  const activateGeoJSONFeature = (
+    resourceService: JRResourceService,
+    properties: Record<string, string>
+  ) => {
+    const attachmentFileName = 'external-data.geojson';
+    const feature = {
+      type: 'Feature',
+      geometry: { type: 'Point', coordinates: [102, 0.5] },
+      properties,
+    };
+    resourceService.activateResource(
+      {
+        url: `jr://file/${attachmentFileName}`,
+        fileName: attachmentFileName,
+        mimeType: 'application/geo+json',
+      },
+      JSON.stringify({ type: 'FeatureCollection', features: [feature] })
+    );
+  };
+
   /**
    * **PORTING NOTES**
    *
@@ -668,6 +688,25 @@ describe('SelectChoiceTest.java', () => {
         ['name', 'Your cool point'],
         ['foo', 'quux'],
         ['special-property', 'special value'],
+      ]);
+    });
+
+    it('returns GeoJSON properties whose names start with numbers', async () => {
+      activateGeoJSONFeature(resourceService, {
+        id: 'fs87b',
+        name: 'My cool point',
+        '00tz4q': 'starts with digits',
+        '2024': 'is a number',
+      });
+
+      const scenario = await Scenario.init(externalSelectGeoJSON, { resourceService });
+
+      expect(scenario.choicesOf('/data/q').get(0)?.getProperties()).deep.equal([
+        ['geometry', '0.5 102 0 0'],
+        ['id', 'fs87b'],
+        ['2024', 'is a number'],
+        ['name', 'My cool point'],
+        ['00tz4q', 'starts with digits'],
       ]);
     });
 

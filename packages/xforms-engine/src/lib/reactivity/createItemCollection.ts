@@ -10,10 +10,11 @@ import { TextChunk } from '../../instance/text/TextChunk.ts';
 import { TextRange } from '../../instance/text/TextRange.ts';
 import type { EngineXPathNode } from '../../integration/xpath/adapter/kind.ts';
 import type { EngineXPathEvaluator } from '../../integration/xpath/EngineXPathEvaluator.ts';
+import type { StaticElement } from '../../integration/xpath/static-dom/StaticElement.ts';
 import type { ItemDefinition } from '../../parse/body/control/ItemDefinition.ts';
 import type { ItemsetDefinition } from '../../parse/body/control/ItemsetDefinition.ts';
 import type { ItemCollectionDefinition } from '../../parse/body/control/parseItemCollection.ts';
-import { createComputedExpression, type ComputedExpression } from './createComputedExpression.ts';
+import { createComputedExpression } from './createComputedExpression.ts';
 import type { ReactiveScope } from './scope.ts';
 import { createTextRange } from './text/createTextRange.ts';
 
@@ -31,7 +32,7 @@ const labelError = (label: ClientTextRange<'item-label'>): Error | null => {
   return label instanceof TextRange ? label.error : null;
 };
 
-type ItemProperty = [string, ComputedExpression<'string'>];
+type ItemProperty = [name: string, value: Accessor<string>];
 
 const registerItemsError = (
   control: ItemCollectionControl,
@@ -125,10 +126,36 @@ const createItemsetItemLabel = (
   return createTextRange(context, 'item-label', label);
 };
 
+const isGeoJSONItem = (itemNode: EngineXPathNode): boolean => {
+  return itemNode.nodeType === 'static-element' && itemNode.rootDocument.sourceFormat === 'geojson';
+};
+
+const readGeoJSONItemProperties = (propertyNodes: readonly StaticElement[]): ItemProperty[] => {
+  return propertyNodes.map((node) => [node.qualifiedName.localName, () => node.getXPathValue()]);
+};
+
+const createItemProperties = (
+  context: ItemsetItemEvaluationContext,
+  itemset: ItemsetDefinition,
+  itemNode: EngineXPathNode
+): ItemProperty[] => {
+  const propertyNodes = itemNode
+    .getXPathChildNodes()
+    .filter((node) => node.nodeType === 'static-element');
+
+  if (isGeoJSONItem(itemNode)) {
+    return readGeoJSONItemProperties(propertyNodes);
+  }
+
+  return itemset.getPropertiesExpressions(propertyNodes).map((expression) => {
+    return [expression.toString(), createComputedExpression(context, expression)] as ItemProperty;
+  });
+};
+
 interface ItemsetItem {
   label(): ClientTextRange<'item-label'>;
   value(): string;
-  properties: Array<[string, () => string]>;
+  properties: ItemProperty[];
   context: ItemsetItemEvaluationContext;
 }
 
@@ -186,19 +213,10 @@ const createItemsetItems = (
           });
           const label = createItemsetItemLabel(context, itemset, value);
 
-          const nodeElements = itemNode
-            .getXPathChildNodes()
-            .filter((node) => node.nodeType === 'static-element');
-          const properties = itemset.getPropertiesExpressions(nodeElements).map((expression) => {
-            return [
-              expression.toString(),
-              createComputedExpression(context, expression),
-            ] as ItemProperty;
-          });
           return {
             label,
             value,
-            properties,
+            properties: createItemProperties(context, itemset, itemNode),
             context,
           };
         });
